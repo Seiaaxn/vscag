@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import Navbar from '../components/Navbar';
 import ContentGrid from '../components/ContentGrid';
 import Reveal from '../components/Reveal';
 import EmptyState from '../components/EmptyState';
@@ -76,8 +75,7 @@ const Watch = () => {
 
   if (!id) {
     return (
-      <div className="min-h-screen pb-24">
-        <Navbar />
+      <div className="min-h-screen pb-10">
         <div className="mx-auto max-w-2xl px-4 pt-10">
           <EmptyState title="Belum ada judul dipilih" text="Pilih judul dari beranda, pencarian, atau genre untuk mulai menonton." actions={['home', 'explore', 'genre']} />
         </div>
@@ -86,8 +84,7 @@ const Watch = () => {
   }
 
   return (
-    <div className="min-h-screen pb-24">
-      <Navbar />
+    <div className="min-h-screen pb-10">
 
       <div className="mx-auto max-w-2xl px-4 pt-4">
         <button type="button" onClick={goBack}

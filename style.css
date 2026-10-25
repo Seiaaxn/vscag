@@ -13,9 +13,9 @@ body { margin: 0; color: #fff; font-family: 'Quicksand', sans-serif; overflow-x:
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
 /* Glass: panel buram netral di atas hitam */
-.glass { background: rgb(255 255 255 / .05); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+.glass { background: rgb(22 22 26 / .88);
   border: 1px solid rgb(255 255 255 / .10); }
-.glass-strong { background: rgb(255 255 255 / .07); -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px);
+.glass-strong { background: rgb(26 26 30 / .94);
   border: 1px solid rgb(255 255 255 / .12); }
 .glass-hover { transition: background .2s, border-color .2s; }
 .glass-hover:hover { background: rgb(255 255 255 / .09); border-color: rgb(var(--gold) / .4); }
@@ -37,3 +37,7 @@ body { margin: 0; color: #fff; font-family: 'Quicksand', sans-serif; overflow-x:
 @keyframes shimmer { 0% { transform: translate3d(-100%,0,0) skewX(-20deg); } 100% { transform: translate3d(200%,0,0) skewX(-20deg); } }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes slideDown { from { opacity: 0; transform: translateY(-10px) scaleY(.95); } to { opacity: 1; transform: none; } }
+
+/* Performa scroll */
+img { content-visibility: auto; }
+.cv-auto { content-visibility: auto; contain-intrinsic-size: 160px; }

@@ -15,7 +15,7 @@ class ErrorBoundary extends React.Component {
     if (this.state.hasError) {
       return (
         <div style={{ minHeight: '100vh', backgroundColor: '#0a0a0c', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: 'white', fontFamily: 'sans-serif', padding: '24px', textAlign: 'center' }}>
-          <div style={{ fontSize: '48px', marginBottom: '16px' }}>😵</div>
+          <img src="/img/nefusoft.webp" alt="NefuSoft" style={{ width: '64px', height: '64px', objectFit: 'contain', marginBottom: '16px' }} />
           <h2 style={{ fontWeight: 900, fontSize: '20px', marginBottom: '8px' }}>Oops, ada yang error</h2>
           <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '13px', marginBottom: '24px' }}>Coba refresh halaman ini</p>
           <button onClick={() => window.location.reload()} style={{ background: '#F6CF80', color: '#0a0a0c', border: 'none', borderRadius: '999px', padding: '12px 28px', fontWeight: 900, fontSize: '13px', cursor: 'pointer' }}>

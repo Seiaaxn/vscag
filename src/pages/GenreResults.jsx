@@ -1,18 +1,17 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import ContentGrid from '../components/ContentGrid';
 import ErrorState from '../components/ErrorState';
 import Reveal from '../components/Reveal';
-import { apiGet } from '../lib/api';
+import { apiGet, slugify } from '../lib/api';
 
-// Halaman isi satu genre: /genre/:genreId?name=Nama
+// Halaman isi satu genre: /genre/:slug (contoh /genre/historical)
 // Sengaja terpisah dari /explore (yang khusus pencarian & semua konten).
 const GenreResults = () => {
-  const { genreId } = useParams();
-  const [searchParams] = useSearchParams();
+  const { slug: genreId } = useParams();
   const navigate = useNavigate();
-  const genreName = searchParams.get('name') || genreId.replace(/-/g, ' ');
+  const [genreName, setGenreName] = useState(genreId.replace(/-/g, ' '));
   const [page, setPage] = useState(1);
   const [results, setResults] = useState([]);
   const [hasNext, setHasNext] = useState(false);
@@ -20,6 +19,15 @@ const GenreResults = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => { setPage(1); }, [genreId]);
+
+  // Ambil nama asli genre dari daftar (slug -> "Historical"); kalau gagal tetap pakai slug
+  useEffect(() => {
+    setGenreName(genreId.replace(/-/g, ' '));
+    apiGet('/genres').then(res => {
+      const found = (res.data?.data || []).find(g => g.slug === genreId || slugify(g.name) === slugify(genreId));
+      if (found?.name) setGenreName(found.name);
+    }).catch(() => {});
+  }, [genreId]);
 
   const load = useCallback(async () => {
     setLoading(true); setError(null);

@@ -374,7 +374,10 @@ export const cors = res => {
 };
 
 export const ok = (res, data) => { cors(res); res.json({ status: 200, data }); };
+const cleanMessage = message => (/<!doctype|<html/i.test(String(message))
+  ? 'Situs sumber menolak permintaan (mungkin proteksi Cloudflare atau sedang down).'
+  : String(message));
 export const fail = (res, error, code = 500) => {
   cors(res);
-  res.status(code || error.status || 500).json({ error: error.message, status: error.status || code || 500 });
+  res.status(code || error.status || 500).json({ error: cleanMessage(error.message), status: error.status || code || 500 });
 };

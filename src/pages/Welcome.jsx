@@ -75,9 +75,9 @@ const Welcome = () => {
         }
         @keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
         @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.4} }
-        .fade-up-1 { animation: fadeUp 0.5s ease-out 0.05s both; }
-        .fade-up-2 { animation: fadeUp 0.5s ease-out 0.18s both; }
-        .fade-up-3 { animation: fadeUp 0.5s ease-out 0.3s both; }
+        .fade-up-1 { animation: none; }
+        .fade-up-2 { animation: none; }
+        .fade-up-3 { animation: none; }
         .card-scroll::-webkit-scrollbar { display: none; }
         .card-scroll { -ms-overflow-style: none; scrollbar-width: none; }
         .search-scroll::-webkit-scrollbar { width: 3px; }
@@ -109,12 +109,12 @@ const Welcome = () => {
 
         {/* CARD SCROLL */}
         <div className="relative w-full" style={{ height: '210px' }}>
-          <div className="absolute left-0 top-0 bottom-0 w-14 bg-gradient-to-r from-[#07070a] to-transparent z-10 pointer-events-none" />
-          <div className="absolute right-0 top-0 bottom-0 w-14 bg-gradient-to-l from-[#07070a] to-transparent z-10 pointer-events-none" />
+          <div className="absolute left-0 top-0 bottom-0 w-14 bg-gradient-to-r from-[#000] to-transparent z-10 pointer-events-none" />
+          <div className="absolute right-0 top-0 bottom-0 w-14 bg-gradient-to-l from-[#000] to-transparent z-10 pointer-events-none" />
           <div
             ref={scrollRef}
             className="card-scroll flex items-center gap-4 overflow-x-auto h-full px-10"
-            style={{ cursor: 'grab', paddingTop: '18px', paddingBottom: '18px', transform: 'translate3d(calc(var(--mx) * -22px), calc(var(--sy) * -0.12px), 0)' }}
+            style={{ cursor: 'grab', paddingTop: '18px', paddingBottom: '18px' }}
             onMouseDown={onMouseDown}
             onMouseMove={onMouseMove}
             onMouseUp={onMouseUp}
@@ -123,7 +123,7 @@ const Welcome = () => {
             {animeCards.length === 0
               ? [...Array(14)].map((_, i) => (
                   <div key={i} className="shrink-0 w-[76px] aspect-[3/4.5] rounded-xl bg-white/5 animate-pulse"
-                    style={{ transform: `rotate(${rots[i % 20]}deg) translateY(${yOffs[i % 20]}px)` }} />
+                    style={{ }} />
                 ))
               : animeCards.map((a, i) => {
                   const rot = rots[i % 20];
@@ -136,8 +136,8 @@ const Welcome = () => {
                       className="anime-card shrink-0 rounded-xl overflow-hidden border border-white/10 shadow-[0_10px_28px_rgba(0,0,0,0.55)] cursor-pointer"
                       style={{
                         width: '76px',
-                        transform: `rotate(${rot}deg) translateY(${yOff}px)`,
-                        animation: `cardFloat ${dur}s ease-in-out ${delay}s infinite`,
+                        
+                        
                         '--cr': `${rot}deg`,
                       }}
                       onClick={() => navigate(`/watch?id=${a.id}`)}
@@ -153,9 +153,9 @@ const Welcome = () => {
         </div>
 
         {/* HERO TEXT + SEARCH */}
-        <div className="glass-strong mx-4 mt-4 mb-10 flex max-w-lg flex-col items-start rounded-[2rem] px-6 pt-6 pb-8 md:mx-10" style={{ transform: 'translate3d(calc(var(--mx) * 8px), calc(var(--sy) * -0.06px), 0)' }}>
+        <div className="glass-strong mx-4 mt-4 mb-10 flex max-w-lg flex-col items-start rounded-[2rem] px-6 pt-6 pb-8 md:mx-10">
           <div className="inline-flex items-center gap-2 bg-[#F6CF80]/10 border border-[#F6CF80]/20 rounded-full px-3 py-1 mb-4 fade-up-1">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#F6CF80]" style={{ animation: 'blink 2s ease-in-out infinite' }} />
+            <span className="w-1.5 h-1.5 rounded-full bg-[#F6CF80]" />
             <span className="text-[#F6CF80] text-[10px] font-black uppercase tracking-widest">Gratis & Tanpa Iklan</span>
           </div>
 
@@ -215,7 +215,7 @@ const Welcome = () => {
 
         {/* ABOUT */}
         <div className="mt-4 mb-24 flex flex-col items-center text-center px-6">
-          <img src="/img/kaguya.webp" alt="Kaguya" className="w-24 object-contain mb-5 drop-shadow-2xl" loading="lazy" style={{ animation: 'float 5s ease-in-out infinite' }} />
+          <img src="/img/kaguya.webp" alt="Kaguya" className="w-24 object-contain mb-5 drop-shadow-2xl" loading="lazy" />
           <h2 className="text-3xl font-[900] tracking-tighter mb-3">Nefu<span className="text-[#F6CF80]">Soft</span></h2>
           <p className="text-white/35 text-sm font-medium leading-relaxed max-w-xs">
             NefuSoft menyediakan akses menonton ribuan judul anime secara gratis tanpa gangguan iklan.

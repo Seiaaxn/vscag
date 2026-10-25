@@ -32,11 +32,12 @@ const AnimatedRoutes = () => {
         <Route path="/"         element={<Welcome />} />
         <Route path="/home"     element={<Home />} />
         <Route path="/explore"  element={<Explore />} />
+        <Route path="/explore/:query" element={<Explore />} />
         <Route path="/ongoing"  element={<Ongoing />} />
         <Route path="/schedule" element={<Schedule />} />
         <Route path="/watch"    element={<Watch />} />
         <Route path="/genre"    element={<Genre />} />
-        <Route path="/genre/:genreId" element={<GenreResults />} />
+        <Route path="/genre/:slug" element={<GenreResults />} />
         <Route path="/anime/:id" element={<Detail />} />
         <Route path="/login"    element={<Auth mode="login" />} />
         <Route path="/register" element={<Auth mode="register" />} />

@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    {
+      "source": "/nk-api/:path*",
+      "destination": "/api/nk-api/:path*"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}

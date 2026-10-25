@@ -2,8 +2,9 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import ContentGrid from '../components/ContentGrid';
-
-const API = '/nk-api';
+import ErrorState from '../components/ErrorState';
+import Reveal from '../components/Reveal';
+import { apiGet } from '../lib/api';
 
 const Explore = () => {
   const navigate = useNavigate();
@@ -14,23 +15,24 @@ const Explore = () => {
   const [results, setResults] = useState([]);
   const [hasNext, setHasNext] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const genreId = searchParams.get('genre_id');
   const genreName = searchParams.get('genre_name') || 'Genre';
 
   const load = useCallback(async () => {
-    setLoading(true);
+    setLoading(true); setError(null);
     try {
       if (query) {
-        const res = await fetch(`${API}/search?q=${encodeURIComponent(query)}`).then(r => r.json());
+        const res = await apiGet(`/search?q=${encodeURIComponent(query)}`);
         setResults(res.data?.results || []); setHasNext(false);
       } else if (genreId) {
-        const res = await fetch(`${API}/genre?id=${genreId}&page=${page}&limit=20`).then(r => r.json());
+        const res = await apiGet(`/genre?id=${genreId}&page=${page}&limit=20`);
         const data = res.data || {}; setResults(data.results || []); setHasNext(data.hasNext || false);
       } else {
-        const res = await fetch(`${API}/all?page=${page}`).then(r => r.json());
+        const res = await apiGet(`/all?page=${page}`);
         const data = res.data || {}; setResults(data.results || []); setHasNext(data.hasNext || false);
       }
-    } catch { setResults([]); setHasNext(false); }
+    } catch (e) { setResults([]); setHasNext(false); setError(e.message); }
     setLoading(false);
   }, [query, genreId, page]);
 
@@ -46,15 +48,14 @@ const Explore = () => {
   const clearAll = () => { setQuery(''); setInput(''); setPage(1); navigate('/explore', { replace: true }); };
 
   return (
-    <div className="min-h-screen bg-[#0a0a0c] pb-24">
-      <style>{`@keyframes shimmer{0%{transform:translate3d(-100%,0,0) skewX(-20deg)}100%{transform:translate3d(200%,0,0) skewX(-20deg)}} body,html{background:#0a0a0c!important;color:white;margin:0;padding:0}`}</style>
+    <div className="min-h-screen pb-24">
       <Navbar />
-      <main className="mx-auto max-w-5xl px-4 pb-8 pt-24">
-        <form onSubmit={event => { event.preventDefault(); doSearch(); }} className="mb-5 flex gap-2">
+      <main className="mx-auto max-w-5xl px-4 pb-8 pt-28">
+        <Reveal as="form" onSubmit={event => { event.preventDefault(); doSearch(); }} className="mb-6 flex gap-2">
           <input value={input} onChange={event => setInput(event.target.value)} placeholder="Cari judul..."
-            className="min-w-0 flex-1 bg-[#16161a] px-4 py-3 text-xs font-bold text-white outline-none placeholder:text-white/20 focus:bg-[#1b1b20]" />
-          <button type="submit" className="shrink-0 bg-[#F6CF80] px-5 text-xs font-black text-black active:scale-95">Cari</button>
-        </form>
+            className="glass-input min-w-0 flex-1 rounded-2xl px-5 py-3.5 text-xs font-bold text-white outline-none placeholder:text-white/30" />
+          <button type="submit" className="btn-gold shrink-0 rounded-2xl px-6 text-xs font-black text-black">Cari</button>
+        </Reveal>
 
         {(query || genreId) && <div className="mb-4 flex items-center gap-3">
           <span className="text-xs font-bold text-white/40">{genreId ? 'Genre:' : 'Hasil:'}</span>
@@ -67,13 +68,13 @@ const Explore = () => {
           <span className="text-[10px] font-bold text-white/30">Hal. {page}</span>
         </div>}
 
-        <ContentGrid items={results} loading={loading} skeletonCount={12} />
+        {error ? <ErrorState message={error} onRetry={load} /> : <ContentGrid items={results} loading={loading} skeletonCount={12} />}
 
-        {!loading && results.length > 0 && !query && <div className="mt-8 flex justify-center gap-3">
+        {!loading && !error && results.length > 0 && !query && <div className="mt-10 flex justify-center gap-3">
           <button onClick={() => { setPage(value => value - 1); window.scrollTo(0, 0); }} disabled={page <= 1}
-            className="bg-[#16161a] px-5 py-2.5 text-xs font-bold text-white disabled:opacity-20 hover:text-[#F6CF80]">← Prev</button>
+            className="glass glass-hover rounded-full px-6 py-2.5 text-xs font-bold text-white disabled:opacity-25">← Prev</button>
           <button onClick={() => { setPage(value => value + 1); window.scrollTo(0, 0); }} disabled={!hasNext}
-            className="bg-[#16161a] px-5 py-2.5 text-xs font-bold text-white disabled:opacity-20 hover:text-[#F6CF80]">Next →</button>
+            className="glass glass-hover rounded-full px-6 py-2.5 text-xs font-bold text-white disabled:opacity-25">Next →</button>
         </div>}
       </main>
     </div>

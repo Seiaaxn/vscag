@@ -1,6 +1,5 @@
 import React from 'react';
 import ContentCard from './ContentCard';
-import Reveal from './Reveal';
 
 const Shimmer = () => (
   <div className="absolute inset-0 w-[200%] animate-[shimmer_1.5s_infinite]
@@ -25,9 +24,9 @@ const ContentGrid = ({ items = [], loading = false, skeletonCount = 8, emptyText
   loading ? <ListSkeleton count={skeletonCount} /> : items.length > 0 ? (
     <div className={GRID}>
       {items.map((item, index) => (
-        <Reveal key={item.id || item.slug || index} delay={(index % 8) * 60}>
+        <div key={item.id || item.slug || index} className="cv-auto">
           <ContentCard item={item} />
-        </Reveal>
+        </div>
       ))}
     </div>
   ) : (

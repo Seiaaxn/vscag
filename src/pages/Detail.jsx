@@ -4,7 +4,7 @@ import ContentGrid from '../components/ContentGrid';
 import ErrorState from '../components/ErrorState';
 import Logo from '../components/Logo';
 import BookmarkButton from '../components/BookmarkButton';
-import { apiGet, proxyImg } from '../lib/api';
+import { apiGet, proxyImg, genrePath } from '../lib/api';
 import { useAuth } from '../context/AuthContext';
 
 const Shimmer = () => <div className="absolute inset-0 w-[200%] animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-white/10 to-transparent" style={{ transform: 'translate3d(-100%,0,0) skewX(-20deg)' }} />;
@@ -158,7 +158,7 @@ const Detail = () => {
             <div className="mt-4 flex flex-wrap gap-1.5">
               {data.genres.map((genre, index) => (
                 <button key={index} type="button"
-                  onClick={() => navigate(`/genre/${encodeURIComponent(genre.id)}?name=${encodeURIComponent(genre.name)}`)}
+                  onClick={() => navigate(genrePath(genre))}
                   className="rounded-lg border border-white/10 px-2.5 py-1 text-[10px] font-bold text-white/55 transition-all hover:border-[#F6CF80]/40 hover:text-[#F6CF80] active:scale-95">
                   {genre.name}
                 </button>

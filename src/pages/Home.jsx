@@ -41,7 +41,7 @@ const BannerCarousel = ({ items, loading }) => {
   return (
     <div className="mx-4 mb-6">
       <div className="glass group relative aspect-[2/1] cursor-pointer overflow-hidden rounded-3xl md:aspect-[21/9]"
-        onClick={() => navigate(`/watch?id=${item.id}`)}>
+        onClick={() => navigate(`/anime/${item.id}`)}>
         {items.map((slide, i) => (
           <div key={slide.id || i} className="absolute inset-0 transition-opacity duration-500" style={{ opacity: i === index ? 1 : 0 }}>
             <div className="absolute inset-0" >
@@ -95,7 +95,7 @@ const Home = () => {
   const [q, setQ] = useState('');
   const banners = data?.carousel || [];
   const posts = data?.posts || [];
-  const chips = [['Semua Konten →', '/explore', true], ['Genre', '/history'], ['Jadwal Rilis', '/schedule']];
+  const chips = [['Semua Konten →', '/explore', true], ['Genre', '/genre'], ['Jadwal Rilis', '/schedule']];
   return (
     <div className="min-h-screen">
       <Navbar />

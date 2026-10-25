@@ -30,6 +30,13 @@ const Watch = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError]     = useState(null);
   const [activeServer, setActiveServer] = useState(0);
+  const [blockPopups, setBlockPopups] = useState(() => {
+    try { return localStorage.getItem('blockPopups') === '1'; } catch { return false; }
+  });
+  const togglePopups = () => setBlockPopups(value => {
+    try { localStorage.setItem('blockPopups', value ? '0' : '1'); } catch { /* abaikan */ }
+    return !value;
+  });
   const onPlayerError = useCallback(message => setError(message), []);
 
   useEffect(() => {
@@ -83,7 +90,7 @@ const Watch = () => {
             <DirectPlayer key={streamUrl} url={streamUrl} onError={onPlayerError} />
           )}
           {!loading && streamUrl && !isDirectVideo && (
-            <EmbedPlayer url={streamUrl} />
+            <EmbedPlayer url={streamUrl} blockPopups={blockPopups} />
           )}
           {!loading && !streamUrl && !error && (
             <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 px-6 text-center">
@@ -96,6 +103,19 @@ const Watch = () => {
             </div>
           )}
         </div>
+
+        {streamUrl && !isDirectVideo && (
+          <div className="glass mx-4 mt-3 flex items-center justify-between gap-3 rounded-2xl px-4 py-2.5">
+            <div className="min-w-0">
+              <p className="text-[10px] font-black text-white">Blokir pop-up iklan: {blockPopups ? 'AKTIF' : 'MATI'}</p>
+              <p className="text-[9px] font-bold text-white/40">Kalau video tidak mau diputar saat aktif, matikan lagi atau pilih server lain.</p>
+            </div>
+            <button type="button" onClick={togglePopups}
+              className={`shrink-0 rounded-full px-4 py-1.5 text-[10px] font-black ${blockPopups ? 'glass text-white/70' : 'btn-gold text-black'}`}>
+              {blockPopups ? 'Matikan' : 'Aktifkan'}
+            </button>
+          </div>
+        )}
 
         <div className="px-4 py-4">
           <button onClick={() => navigate(-1)}

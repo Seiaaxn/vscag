@@ -6,7 +6,7 @@ import ErrorState from '../components/ErrorState';
 import Reveal from '../components/Reveal';
 import EmptyState from '../components/EmptyState';
 import Logo from '../components/Logo';
-import { apiGet, proxyImg } from '../lib/api';
+import { apiGet, proxyImg, explorePath } from '../lib/api';
 
 const Row = ({ title, items, loading }) => {
   if (!loading && items.length === 0) return null;
@@ -102,7 +102,7 @@ const Home = () => {
         <Reveal className="mx-4 mb-5 flex items-center gap-3">
           <img src="/img/nefusoft.webp" alt="NefuSoft" className="h-11 w-11 shrink-0 object-contain" />
           <form className="glass-input flex min-w-0 flex-1 items-center rounded-2xl px-4 py-3"
-            onSubmit={e => { e.preventDefault(); if (q.trim()) navigate(`/explore?q=${encodeURIComponent(q.trim())}`); }}>
+            onSubmit={e => { e.preventDefault(); if (q.trim()) navigate(explorePath(q.trim())); }}>
             <input value={q} onChange={e => setQ(e.target.value)} placeholder="Cari judul..."
               className="min-w-0 flex-1 bg-transparent text-xs font-bold text-white outline-none placeholder:text-white/30" />
             <button type="submit" className="ml-2 text-[#F6CF80]" aria-label="Cari">

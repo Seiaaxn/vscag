@@ -30,14 +30,6 @@ const Watch = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError]     = useState(null);
   const [activeServer, setActiveServer] = useState(0);
-  const [adFree, setAdFree] = useState(() => {
-    try { return localStorage.getItem('adfree') !== '0'; } catch { return true; }
-  });
-  const toggleAdFree = () => setAdFree(value => {
-    const next = !value;
-    try { localStorage.setItem('adfree', next ? '1' : '0'); } catch { /* abaikan */ }
-    return next;
-  });
   const onPlayerError = useCallback(message => setError(message), []);
 
   useEffect(() => {
@@ -91,7 +83,7 @@ const Watch = () => {
             <DirectPlayer key={streamUrl} url={streamUrl} onError={onPlayerError} />
           )}
           {!loading && streamUrl && !isDirectVideo && (
-            <EmbedPlayer url={streamUrl} adFree={adFree} />
+            <EmbedPlayer url={streamUrl} />
           )}
           {!loading && !streamUrl && !error && (
             <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 px-6 text-center">
@@ -104,19 +96,6 @@ const Watch = () => {
             </div>
           )}
         </div>
-
-        {streamUrl && !isDirectVideo && (
-          <div className="mx-4 mt-3 flex items-center justify-between gap-3 glass rounded-2xl px-4 py-2.5">
-            <div className="min-w-0">
-              <p className="text-[10px] font-black text-white">Blokir iklan pop-up: {adFree ? 'AKTIF' : 'MATI'}</p>
-              <p className="text-[9px] font-bold text-white/40">Kalau video tidak mau diputar, matikan lalu muat ulang server.</p>
-            </div>
-            <button type="button" onClick={toggleAdFree}
-              className={`shrink-0 rounded-full px-4 py-1.5 text-[10px] font-black ${adFree ? 'btn-gold text-black' : 'glass text-white/70'}`}>
-              {adFree ? 'Matikan' : 'Aktifkan'}
-            </button>
-          </div>
-        )}
 
         <div className="px-4 py-4">
           <button onClick={() => navigate(-1)}

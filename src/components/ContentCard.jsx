@@ -3,14 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import { proxyImg } from '../lib/api';
 import Logo from './Logo';
 
-const ContentCard = ({ item }) => {
+const ContentCard = ({ item, to = 'anime' }) => {
   const navigate = useNavigate();
   const [imageError, setImageError] = useState(false);
-  const target = item?.id
-    ? `/watch?id=${item.id}`
-    : item?.slug
-      ? `/watch?slug=${encodeURIComponent(item.slug)}`
-      : null;
+  // to="anime" -> halaman detail; to="watch" -> langsung memutar (dipakai untuk daftar episode)
+  const key = item?.id ?? item?.slug;
+  const target = key == null ? null
+    : to === 'watch' ? `/watch?id=${encodeURIComponent(key)}`
+    : `/anime/${encodeURIComponent(key)}`;
 
   if (!target) return null;
   return (

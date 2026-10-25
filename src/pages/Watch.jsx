@@ -3,6 +3,7 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import ContentGrid from '../components/ContentGrid';
 import Reveal from '../components/Reveal';
+import EmptyState from '../components/EmptyState';
 import { apiGet, proxyImg } from '../lib/api';
 
 const RelatedRow = ({ title, items }) => {
@@ -52,11 +53,22 @@ const Watch = () => {
     activeStream.kind === 'direct' || /\.(?:mp4|m3u8)(?:[?#]|$)/i.test(activeStream.url || '')
   ));
 
+  if (!id) {
+    return (
+      <div className="min-h-screen pb-24">
+        <Navbar />
+        <div className="mx-auto max-w-2xl px-4 pt-10">
+          <EmptyState icon="🎬" title="Belum ada judul dipilih" text="Pilih judul dari beranda, pencarian, atau genre untuk mulai menonton." actions={['home', 'explore', 'genre']} />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen pb-24">
       <Navbar />
 
-      <div className="pt-24 max-w-2xl mx-auto">
+      <div className="pt-6 max-w-2xl mx-auto">
         {/* Player */}
         <div className="glass mx-3 aspect-video relative overflow-hidden rounded-3xl bg-black/70 shadow-[0_20px_60px_rgba(0,0,0,0.6)]">
           {loading && (
@@ -75,8 +87,8 @@ const Watch = () => {
           )}
           {!loading && !streamUrl && !error && (
             <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 px-6 text-center">
-              <span className="text-4xl opacity-20">🐱</span>
-              <span className="text-white/50 text-xs font-bold">
+              <span className="text-4xl opacity-30">🎞️</span>
+              <span className="text-white/60 text-xs font-bold">
                 {iframeStreams.length > 0
                   ? 'Memakai iframe dari API karena direct video tidak tersedia.'
                   : 'Tidak ada media yang tersedia dari API.'}

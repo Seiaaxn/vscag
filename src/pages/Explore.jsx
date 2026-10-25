@@ -1,21 +1,28 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import ContentGrid from '../components/ContentGrid';
 import ErrorState from '../components/ErrorState';
 import Reveal from '../components/Reveal';
-import { apiGet } from '../lib/api';
+import { apiGet, explorePath } from '../lib/api';
 
+// /explore         -> semua konten (berhalaman)
+// /explore/:query  -> hasil pencarian, contoh /explore/naruto
+// Genre punya route sendiri di /genre/:slug dan tidak dicampur di sini.
 const Explore = () => {
   const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [query, setQuery] = useState(searchParams.get('q') || '');
-  const [input, setInput] = useState(searchParams.get('q') || '');
+  const { query: pathQuery } = useParams();
+  const [searchParams] = useSearchParams();
+  // ?q= lama tetap terbaca supaya link lama tidak rusak
+  const query = (pathQuery ?? searchParams.get('q') ?? '').trim();
+  const [input, setInput] = useState(query);
   const [page, setPage] = useState(1);
   const [results, setResults] = useState([]);
   const [hasNext, setHasNext] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  useEffect(() => { setInput(query); setPage(1); }, [query]);
 
   const load = useCallback(async () => {
     setLoading(true); setError(null);
@@ -32,20 +39,12 @@ const Explore = () => {
   }, [query, page]);
 
   useEffect(() => { load(); }, [load]);
-  useEffect(() => {
-    const params = {};
-    if (query) params.q = query;
-    setSearchParams(params, { replace: true });
-  }, [query, setSearchParams]);
-
-  const doSearch = () => { setQuery(input.trim()); setPage(1); };
-  const clearAll = () => { setQuery(''); setInput(''); setPage(1); navigate('/explore', { replace: true }); };
 
   return (
     <div className="min-h-screen pb-24">
       <Navbar />
       <main className="mx-auto max-w-5xl px-4 pb-8 pt-6">
-        <Reveal as="form" onSubmit={event => { event.preventDefault(); doSearch(); }} className="mb-6 flex gap-2">
+        <Reveal as="form" onSubmit={event => { event.preventDefault(); navigate(explorePath(input.trim())); }} className="mb-6 flex gap-2">
           <input value={input} onChange={event => setInput(event.target.value)} placeholder="Cari judul..."
             className="glass-input min-w-0 flex-1 rounded-2xl px-5 py-3.5 text-xs font-bold text-white outline-none placeholder:text-white/30" />
           <button type="submit" className="btn-gold shrink-0 rounded-2xl px-6 text-xs font-black text-black">Cari</button>
@@ -54,7 +53,7 @@ const Explore = () => {
         {query && <div className="mb-4 flex items-center gap-3">
           <span className="text-xs font-bold text-white/40">Hasil:</span>
           <span className="text-sm font-black text-[#F6CF80]">{`"${query}"`}</span>
-          <button onClick={clearAll} className="text-xs font-bold text-white/30 hover:text-white">Hapus</button>
+          <button onClick={() => navigate('/explore')} className="text-xs font-bold text-white/30 hover:text-white">Hapus</button>
         </div>}
 
         {!query && <div className="mb-3 flex items-center justify-between">

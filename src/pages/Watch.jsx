@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import ContentGrid from '../components/ContentGrid';
 import Reveal from '../components/Reveal';
 import EmptyState from '../components/EmptyState';
 import Logo from '../components/Logo';
+import { DirectPlayer, EmbedPlayer } from '../components/Player';
 import { apiGet, proxyImg } from '../lib/api';
 
 const RelatedRow = ({ title, items }) => {
@@ -29,6 +30,15 @@ const Watch = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError]     = useState(null);
   const [activeServer, setActiveServer] = useState(0);
+  const [adFree, setAdFree] = useState(() => {
+    try { return localStorage.getItem('adfree') !== '0'; } catch { return true; }
+  });
+  const toggleAdFree = () => setAdFree(value => {
+    const next = !value;
+    try { localStorage.setItem('adfree', next ? '1' : '0'); } catch { /* abaikan */ }
+    return next;
+  });
+  const onPlayerError = useCallback(message => setError(message), []);
 
   useEffect(() => {
     if (!id) return;
@@ -78,13 +88,10 @@ const Watch = () => {
             </div>
           )}
           {!loading && streamUrl && isDirectVideo && (
-            <video key={streamUrl} src={streamUrl} className="absolute inset-0 w-full h-full"
-              controls playsInline preload="metadata" style={{ border:'none' }}
-              onError={() => setError('Direct video tidak dapat diputar oleh browser ini.')} />
+            <DirectPlayer key={streamUrl} url={streamUrl} onError={onPlayerError} />
           )}
           {!loading && streamUrl && !isDirectVideo && (
-            <iframe key={streamUrl} src={streamUrl} className="absolute inset-0 w-full h-full"
-              allowFullScreen allow="autoplay; fullscreen" style={{ border:'none' }} />
+            <EmbedPlayer url={streamUrl} adFree={adFree} />
           )}
           {!loading && !streamUrl && !error && (
             <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 px-6 text-center">
@@ -97,6 +104,19 @@ const Watch = () => {
             </div>
           )}
         </div>
+
+        {streamUrl && !isDirectVideo && (
+          <div className="mx-4 mt-3 flex items-center justify-between gap-3 glass rounded-2xl px-4 py-2.5">
+            <div className="min-w-0">
+              <p className="text-[10px] font-black text-white">Blokir iklan pop-up: {adFree ? 'AKTIF' : 'MATI'}</p>
+              <p className="text-[9px] font-bold text-white/40">Kalau video tidak mau diputar, matikan lalu muat ulang server.</p>
+            </div>
+            <button type="button" onClick={toggleAdFree}
+              className={`shrink-0 rounded-full px-4 py-1.5 text-[10px] font-black ${adFree ? 'btn-gold text-black' : 'glass text-white/70'}`}>
+              {adFree ? 'Matikan' : 'Aktifkan'}
+            </button>
+          </div>
+        )}
 
         <div className="px-4 py-4">
           <button onClick={() => navigate(-1)}

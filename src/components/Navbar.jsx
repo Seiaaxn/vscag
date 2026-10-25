@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { apiGet, proxyImg } from '../lib/api';
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -25,7 +26,7 @@ const Navbar = () => {
       if (searchQuery.length > 2) {
         setIsLiveLoading(true);
         try {
-          const res = await fetch(`/nk-api/search?q=${encodeURIComponent(searchQuery)}`).then(r => r.json());
+          const res = await apiGet(`/search?q=${encodeURIComponent(searchQuery)}`);
           setLiveResults((res.data?.results || []).slice(0, 8));
         } catch { setLiveResults([]); }
         setIsLiveLoading(false);
@@ -64,8 +65,8 @@ const Navbar = () => {
       <style>{`
         @keyframes slideDown{from{opacity:0;transform:translateY(-10px) scaleY(0.95)}to{opacity:1;transform:translateY(0) scaleY(1)}}
         @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-        .notch-nav{position:relative;height:70px;background:rgba(10,10,12,0.95);border:1px solid rgba(255,255,255,0.08);border-radius:32px;display:flex;align-items:flex-end;justify-content:space-around;box-shadow:0 8px 32px rgba(0,0,0,0.4);padding-bottom:8px}
-        .notch-nav::before{content:'';position:absolute;top:-1px;left:${notchPosition};transform:translateX(-50%);width:64px;height:32px;background:rgba(10,10,12,0.95);border-radius:0 0 50% 50% / 0 0 100% 100%;border:1px solid rgba(255,255,255,0.08);border-top:none;transition:left 0.5s cubic-bezier(0.34,1.56,0.64,1);z-index:0}
+        .notch-nav{position:relative;height:70px;background:linear-gradient(135deg,rgba(255,255,255,0.12),rgba(255,255,255,0.03)),rgba(14,14,20,0.55);-webkit-backdrop-filter:blur(26px) saturate(180%);backdrop-filter:blur(26px) saturate(180%);border:1px solid rgba(255,255,255,0.14);border-radius:32px;display:flex;align-items:flex-end;justify-content:space-around;box-shadow:0 12px 40px rgba(0,0,0,0.5),inset 0 1px 0 rgba(255,255,255,0.2);padding-bottom:8px}
+        .notch-nav::before{content:'';position:absolute;top:-1px;left:${notchPosition};transform:translateX(-50%);width:64px;height:32px;background:rgba(20,20,28,0.7);-webkit-backdrop-filter:blur(26px);backdrop-filter:blur(26px);border-radius:0 0 50% 50% / 0 0 100% 100%;border:1px solid rgba(255,255,255,0.14);border-top:none;transition:left 0.5s cubic-bezier(0.34,1.56,0.64,1);z-index:0}
         .notch-item{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;cursor:pointer;flex:1;height:100%;padding-bottom:6px;z-index:1}
         .notch-icon-wrapper{width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:16px;transition:all 0.5s cubic-bezier(0.34,1.56,0.64,1);margin-bottom:2px;position:relative}
         .notch-icon-wrapper.active{background:#F6CF80;transform:translateY(-16px) scale(1.1);box-shadow:0 8px 24px rgba(246,207,128,0.35),0 4px 12px rgba(246,207,128,0.2);border-radius:18px}
@@ -77,7 +78,7 @@ const Navbar = () => {
       `}</style>
 
       <nav className="fixed top-2 inset-x-4 z-[100] max-w-7xl mx-auto">
-        <div className="bg-black/60 h-16 px-6 rounded-2xl flex items-center justify-between border border-white/5 shadow-lg relative overflow-hidden">
+        <div className="glass-strong h-16 px-6 rounded-2xl flex items-center justify-between relative overflow-hidden">
           <div className="flex items-center shrink-0 z-10">
             <img src="https://raw.githubusercontent.com/alip-jmbd/alipp/main/icon-rbg.png"
               className="w-10 md:w-14 aspect-square object-contain cursor-pointer" alt="NefuSoft"
@@ -85,19 +86,19 @@ const Navbar = () => {
           </div>
           <div className="flex items-center justify-end flex-1 gap-3 z-10">
             <div onClick={() => setIsSearchOpen(true)}
-              className="w-9 h-9 bg-white/5 rounded-full flex items-center justify-center text-white cursor-pointer border border-white/10 hover:bg-[#F6CF80] hover:text-black hover:border-[#F6CF80] transition-colors shrink-0">
+              className="w-9 h-9 glass rounded-full flex items-center justify-center text-white cursor-pointer hover:bg-[#F6CF80] hover:text-black hover:border-[#F6CF80] transition-colors shrink-0">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
               </svg>
             </div>
             <div onClick={() => setShowLoginPopup(true)}
-              className="w-9 h-9 bg-white/5 rounded-full flex items-center justify-center text-white cursor-pointer border border-white/10 hover:bg-[#F6CF80] hover:text-black hover:border-[#F6CF80] transition-colors shrink-0">
+              className="w-9 h-9 glass rounded-full flex items-center justify-center text-white cursor-pointer hover:bg-[#F6CF80] hover:text-black hover:border-[#F6CF80] transition-colors shrink-0">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
               </svg>
             </div>
           </div>
-          <div className={`absolute inset-0 bg-[#16161a] z-20 flex items-center px-4 transition-all duration-300 ease-out ${isSearchOpen ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8 pointer-events-none'}`}>
+          <div className={`absolute inset-0 bg-[#12121a]/70 backdrop-blur-xl z-20 flex items-center px-4 transition-all duration-300 ease-out ${isSearchOpen ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8 pointer-events-none'}`}>
             <form onSubmit={handleSearchSubmit} className="flex-1 flex items-center gap-3">
               <button type="submit" className="text-[#F6CF80] shrink-0 p-2">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
@@ -118,7 +119,7 @@ const Navbar = () => {
         </div>
 
         {isSearchOpen && searchQuery.length > 2 && (
-          <div className="absolute top-20 left-4 right-4 md:left-auto md:right-0 md:w-96 bg-[#16161a] border border-white/10 rounded-2xl shadow-2xl z-[110] max-h-[60vh] overflow-y-auto custom-scrollbar origin-top animate-[slideDown_0.2s_ease-out]">
+          <div className="absolute top-20 left-4 right-4 md:left-auto md:right-0 md:w-96 glass-strong rounded-2xl z-[110] max-h-[60vh] overflow-y-auto custom-scrollbar origin-top animate-[slideDown_0.2s_ease-out]">
             {isLiveLoading ? (
               <div className="p-6 text-center text-[#F6CF80] text-xs font-bold">Mencari...</div>
             ) : liveResults.length > 0 ? (
@@ -127,7 +128,7 @@ const Navbar = () => {
                   className="flex items-center gap-4 p-3 hover:bg-white/5 cursor-pointer border-b border-white/5 transition-colors">
                   <div className="w-10 aspect-video bg-[#0a0a0c] rounded-lg overflow-hidden shrink-0 flex items-center justify-center border border-white/5">
                     {r.image
-                      ? <img src={`/nk-api/img?url=${encodeURIComponent(r.image)}`}
+                      ? <img src={proxyImg(r.image)}
                           className="w-full h-full object-cover" onError={e=>{e.target.style.display='none'}} />
                       : <span className="text-white/20 text-[10px]">🐱</span>
                     }
@@ -164,8 +165,8 @@ const Navbar = () => {
       </div>
 
       {showLoginPopup && (
-        <div className="fixed inset-0 z-[999] bg-[#0a0a0c]/90 flex items-center justify-center p-4 animate-[fadeIn_0.2s_ease-out]">
-          <div className="bg-[#16161a] border border-white/10 rounded-3xl p-8 max-w-sm w-full flex flex-col items-center relative shadow-2xl">
+        <div className="fixed inset-0 z-[999] bg-black/45 backdrop-blur-md flex items-center justify-center p-4 animate-[fadeIn_0.2s_ease-out]">
+          <div className="glass-strong rounded-3xl p-8 max-w-sm w-full flex flex-col items-center relative shadow-2xl">
             <button onClick={() => setShowLoginPopup(false)}
               className="absolute top-5 right-5 text-white/30 hover:text-[#F6CF80] transition-colors">
               <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">

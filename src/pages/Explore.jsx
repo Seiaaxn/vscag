@@ -16,8 +16,6 @@ const Explore = () => {
   const [hasNext, setHasNext] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const genreId = searchParams.get('genre_id');
-  const genreName = searchParams.get('genre_name') || 'Genre';
 
   const load = useCallback(async () => {
     setLoading(true); setError(null);
@@ -25,24 +23,20 @@ const Explore = () => {
       if (query) {
         const res = await apiGet(`/search?q=${encodeURIComponent(query)}`);
         setResults(res.data?.results || []); setHasNext(false);
-      } else if (genreId) {
-        const res = await apiGet(`/genre?id=${genreId}&page=${page}&limit=20`);
-        const data = res.data || {}; setResults(data.results || []); setHasNext(data.hasNext || false);
       } else {
         const res = await apiGet(`/all?page=${page}`);
         const data = res.data || {}; setResults(data.results || []); setHasNext(data.hasNext || false);
       }
     } catch (e) { setResults([]); setHasNext(false); setError(e.message); }
     setLoading(false);
-  }, [query, genreId, page]);
+  }, [query, page]);
 
   useEffect(() => { load(); }, [load]);
   useEffect(() => {
     const params = {};
     if (query) params.q = query;
-    if (genreId) { params.genre_id = genreId; params.genre_name = genreName; }
     setSearchParams(params, { replace: true });
-  }, [query, genreId, genreName, setSearchParams]);
+  }, [query, setSearchParams]);
 
   const doSearch = () => { setQuery(input.trim()); setPage(1); };
   const clearAll = () => { setQuery(''); setInput(''); setPage(1); navigate('/explore', { replace: true }); };
@@ -57,18 +51,18 @@ const Explore = () => {
           <button type="submit" className="btn-gold shrink-0 rounded-2xl px-6 text-xs font-black text-black">Cari</button>
         </Reveal>
 
-        {(query || genreId) && <div className="mb-4 flex items-center gap-3">
-          <span className="text-xs font-bold text-white/40">{genreId ? 'Genre:' : 'Hasil:'}</span>
-          <span className="text-sm font-black text-[#F6CF80]">{genreId ? genreName : `"${query}"`}</span>
+        {query && <div className="mb-4 flex items-center gap-3">
+          <span className="text-xs font-bold text-white/40">Hasil:</span>
+          <span className="text-sm font-black text-[#F6CF80]">{`"${query}"`}</span>
           <button onClick={clearAll} className="text-xs font-bold text-white/30 hover:text-white">Hapus</button>
         </div>}
 
-        {!query && !genreId && <div className="mb-3 flex items-center justify-between">
+        {!query && <div className="mb-3 flex items-center justify-between">
           <span className="text-[10px] font-bold uppercase tracking-widest text-white/40">Semua Konten</span>
           <span className="text-[10px] font-bold text-white/30">Hal. {page}</span>
         </div>}
 
-        {error ? <ErrorState message={error} onRetry={load} /> : <ContentGrid items={results} loading={loading} skeletonCount={12} emptyText={query ? `Tidak ada hasil untuk "${query}". Coba kata kunci lain.` : genreId ? 'Belum ada konten di genre ini.' : undefined} />}
+        {error ? <ErrorState message={error} onRetry={load} /> : <ContentGrid items={results} loading={loading} skeletonCount={12} emptyText={query ? `Tidak ada hasil untuk "${query}". Coba kata kunci lain.` : undefined} />}
 
         {!loading && !error && results.length > 0 && !query && <div className="mt-10 flex justify-center gap-3">
           <button onClick={() => { setPage(value => value - 1); window.scrollTo(0, 0); }} disabled={page <= 1}

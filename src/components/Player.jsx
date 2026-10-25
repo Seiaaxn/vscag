@@ -31,12 +31,10 @@ export const DirectPlayer = ({ url, onError }) => {
   );
 };
 
-// Pemutar embed. Mode bebas iklan: iframe di-sandbox tanpa allow-popups / allow-top-navigation,
-// sehingga pop-up iklan dan redirect halaman ke situs lain diblokir, tetapi video tetap bisa diputar.
-export const EmbedPlayer = ({ url, adFree }) => (
-  <iframe key={`${url}:${adFree}`} src={url} title="Player"
+// Pemutar embed tanpa sandbox supaya semua server bisa diputar.
+export const EmbedPlayer = ({ url }) => (
+  <iframe key={url} src={url} title="Player"
     className="absolute inset-0 h-full w-full" style={{ border: 'none' }}
     allowFullScreen allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
-    referrerPolicy="no-referrer"
-    {...(adFree ? { sandbox: 'allow-scripts allow-same-origin allow-presentation allow-forms' } : {})} />
+    referrerPolicy="no-referrer" />
 );

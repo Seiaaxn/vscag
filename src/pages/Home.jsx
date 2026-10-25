@@ -6,6 +6,7 @@ import ContentGrid from '../components/ContentGrid';
 import ErrorState from '../components/ErrorState';
 import Reveal from '../components/Reveal';
 import EmptyState from '../components/EmptyState';
+import Logo from '../components/Logo';
 import { apiGet, proxyImg } from '../lib/api';
 
 const Row = ({ title, items, loading }) => {
@@ -47,7 +48,7 @@ const BannerCarousel = ({ items, loading }) => {
               {slide.image
                 ? <img src={proxyImg(slide.image)} alt={slide.title || 'Banner'} className="h-full w-full object-cover" decoding="async"
                     onError={event => { event.currentTarget.style.display = 'none'; }} />
-                : <div className="flex h-full w-full items-center justify-center"><span className="text-5xl opacity-20">🐱</span></div>}
+                : <div className="flex h-full w-full items-center justify-center"><Logo className="h-16 w-16" dim /></div>}
             </div>
           </div>
         ))}

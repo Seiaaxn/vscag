@@ -4,14 +4,15 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "node server.js & vite",
+    "dev": "concurrently -k -n api,web -c yellow,cyan \"node server.js\" \"vite\"",
     "build": "vite build",
     "start": "node server.js",
     "preview": "vite preview"
   },
   "devDependencies": {
     "tailwindcss": "^4.2.2",
-    "vite": "^8.0.1"
+    "vite": "^8.0.1",
+    "concurrently": "^9.2.1"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.2.2",
@@ -23,5 +24,3 @@
     "react-router-dom": "^7.13.2"
   }
 }
-
-

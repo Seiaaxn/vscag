@@ -7,8 +7,9 @@ import EmptyState from '../components/EmptyState';
 import Logo from '../components/Logo';
 import { DirectPlayer, EmbedPlayer } from '../components/Player';
 import { apiGet, proxyImg } from '../lib/api';
+import { useAuth } from '../context/AuthContext';
 
-const RelatedRow = ({ title, items }) => {
+const RelatedRow = ({ title, items, to }) => {
   if (!items?.length) return null;
   return (
     <section className="mb-6">
@@ -16,7 +17,7 @@ const RelatedRow = ({ title, items }) => {
         <h2 className="text-xs font-black uppercase tracking-widest text-white">{title}</h2>
         <span className="text-[9px] font-bold text-white/25">{items.length} item</span>
       </div>
-      <ContentGrid items={items} />
+      <ContentGrid items={items} to={to} />
     </section>
   );
 };
@@ -25,6 +26,7 @@ const Watch = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const id = searchParams.get('id') || searchParams.get('slug');
+  const { user, addHistory } = useAuth();
 
   const [data, setData]       = useState(null);
   const [loading, setLoading] = useState(true);
@@ -48,6 +50,13 @@ const Watch = () => {
       .catch(e => setError(e.message))
       .finally(() => setLoading(false));
   }, [id]);
+
+  // Simpan ke riwayat (hanya kalau sudah login)
+  useEffect(() => {
+    if (!user || !data?.id) return;
+    addHistory({ id: data.id, title: data.title, image: data.image || data.series?.image, seriesId: data.series?.id });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.id, data?.id]);
 
   const allStreams = data?.streams || [];
   const directStreams = allStreams.filter(stream =>
@@ -260,7 +269,13 @@ const Watch = () => {
                 </details>
               )}
 
-              <RelatedRow title="Episode" items={data.episodes} />
+              {(data.series?.id || data.episodes?.length > 0) && (
+                <button type="button" onClick={() => navigate(`/anime/${data.series?.id ?? data.id}`)}
+                  className="glass glass-hover mb-4 w-full rounded-2xl px-4 py-3 text-[11px] font-black text-[#F6CF80]">
+                  Lihat Detail &amp; Semua Episode →
+                </button>
+              )}
+              <RelatedRow title="Episode" items={data.episodes} to="watch" />
               <RelatedRow title="Info Lainnya" items={data.related?.info} />
               <RelatedRow title="Hentai Lainnya" items={data.related?.hentai} />
             </>

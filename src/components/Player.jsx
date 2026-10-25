@@ -31,10 +31,13 @@ export const DirectPlayer = ({ url, onError }) => {
   );
 };
 
-// Pemutar embed tanpa sandbox supaya semua server bisa diputar.
-export const EmbedPlayer = ({ url }) => (
-  <iframe key={url} src={url} title="Player"
+// Pemutar embed. Default TANPA sandbox agar semua server bisa diputar.
+// blockPopups=true memasang sandbox tanpa allow-popups / allow-top-navigation:
+// pop-up dan redirect iklan diblokir, tapi sebagian server menolak berjalan di dalam sandbox.
+export const EmbedPlayer = ({ url, blockPopups = false }) => (
+  <iframe key={`${url}:${blockPopups}`} src={url} title="Player"
     className="absolute inset-0 h-full w-full" style={{ border: 'none' }}
     allowFullScreen allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
-    referrerPolicy="no-referrer" />
+    referrerPolicy="no-referrer"
+    {...(blockPopups ? { sandbox: 'allow-scripts allow-same-origin allow-presentation allow-forms' } : {})} />
 );

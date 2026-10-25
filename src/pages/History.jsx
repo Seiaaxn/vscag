@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import ErrorState from '../components/ErrorState';
 import Reveal from '../components/Reveal';
+import EmptyState from '../components/EmptyState';
 import { apiGet } from '../lib/api';
 
 const Shimmer = () => <div className="absolute inset-0 w-[200%] animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-white/10 to-transparent" style={{ transform: 'translate3d(-100%,0,0) skewX(-20deg)' }} />;
@@ -27,7 +28,7 @@ const History = () => {
   return (
     <div className="min-h-screen pb-24">
       <Navbar />
-      <main className="mx-auto max-w-5xl px-4 pb-8 pt-28">
+      <main className="mx-auto max-w-5xl px-4 pb-8 pt-6">
         <Reveal className="glass mb-5 rounded-3xl px-5 py-4">
           <h1 className="text-lg font-black uppercase text-white">Genre</h1>
           <span className="text-[10px] font-bold uppercase tracking-widest text-white/40">{genres.length} genre tersedia</span>
@@ -39,7 +40,7 @@ const History = () => {
         {error ? <ErrorState message={error} onRetry={load} /> : loading ? <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
           {[...Array(16)].map((_, index) => <div key={index} className="glass relative h-12 overflow-hidden rounded-2xl"><Shimmer /></div>)}
         </div> : filtered.length === 0 ? (
-          <div className="glass mx-auto max-w-xs rounded-2xl py-14 text-center text-sm font-bold text-white/40">Tidak ditemukan</div>
+          <EmptyState icon="🔎" title="Genre tidak ditemukan" text="Tidak ada genre yang cocok dengan filter. Hapus filter atau lihat semua konten." actions={['explore', 'home']} />
         ) : <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
           {filtered.map((genre, index) => <Reveal key={genre.id || index} delay={(index % 8) * 40}>
             <button onClick={() => navigate(`/explore?genre_id=${genre.id}&genre_name=${encodeURIComponent(genre.name)}`)}

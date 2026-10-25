@@ -5,7 +5,7 @@ import Reveal from '../components/Reveal';
 import EmptyState from '../components/EmptyState';
 import Logo from '../components/Logo';
 import { DirectPlayer, EmbedPlayer } from '../components/Player';
-import { apiGet, proxyImg } from '../lib/api';
+import { apiGet, proxyImg, genrePath } from '../lib/api';
 import { useAuth } from '../context/AuthContext';
 
 const RelatedRow = ({ title, items, to }) => {
@@ -225,7 +225,7 @@ const Watch = () => {
                 <div className="flex flex-wrap gap-1.5 mb-4">
                   {data.genres.map((g, i) => (
                     <button key={i}
-                      onClick={() => navigate(`/genre/${encodeURIComponent(g.id)}?name=${encodeURIComponent(g.name)}`)}
+                      onClick={() => navigate(genrePath(g))}
                       className="text-[9px] font-bold text-white/50 border border-white/10 px-2 py-1
                         rounded-lg hover:border-[#F6CF80]/40 hover:text-[#F6CF80] transition-all active:scale-95">
                       {g.name}

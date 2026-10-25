@@ -39,6 +39,8 @@ const Watch = () => {
     try { localStorage.setItem('blockPopups', value ? '0' : '1'); } catch { /* abaikan */ }
     return !value;
   });
+  // Kembali ke halaman sebelumnya; kalau dibuka langsung lewat link (tanpa riwayat), ke beranda
+  const goBack = () => (window.history.state?.idx > 0 ? navigate(-1) : navigate('/home'));
   const onPlayerError = useCallback(message => setError(message), []);
 
   useEffect(() => {
@@ -87,7 +89,15 @@ const Watch = () => {
     <div className="min-h-screen pb-24">
       <Navbar />
 
-      <div className="pt-6 max-w-2xl mx-auto">
+      <div className="mx-auto max-w-2xl px-4 pt-4">
+        <button type="button" onClick={goBack}
+          className="glass glass-hover flex items-center gap-1.5 rounded-full py-2 pl-3 pr-4 text-xs font-black text-white/80 active:scale-95">
+          <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5"><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" /></svg>
+          Kembali
+        </button>
+      </div>
+
+      <div className="pt-3 max-w-2xl mx-auto">
         {/* Player */}
         <div className="glass mx-3 aspect-video relative overflow-hidden rounded-3xl bg-black/70 shadow-[0_20px_60px_rgba(0,0,0,0.6)]">
           {loading && (
@@ -127,13 +137,6 @@ const Watch = () => {
         )}
 
         <div className="px-4 py-4">
-          <button onClick={() => navigate(-1)}
-            className="flex items-center gap-1.5 text-white/40 hover:text-white text-xs font-bold mb-4 transition-colors">
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7"/>
-            </svg>
-            Kembali
-          </button>
 
           {error && (
             <div className="glass rounded-2xl border-red-500/30 p-4 mb-4">

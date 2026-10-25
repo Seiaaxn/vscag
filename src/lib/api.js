@@ -58,3 +58,9 @@ export async function apiGet(path, { signal, retries = 1 } = {}) {
   }
   throw lastError;
 }
+
+// URL bersih: /genre/historical, /explore/naruto (bukan query string)
+export const slugify = value => String(value ?? '').trim().toLowerCase()
+  .replace(/[^\p{L}\p{N}]+/g, '-').replace(/^-+|-+$/g, '');
+export const genrePath = genre => `/genre/${encodeURIComponent(genre.slug || slugify(genre.name))}`;
+export const explorePath = query => (query ? `/explore/${encodeURIComponent(query)}` : '/explore');

@@ -140,7 +140,7 @@ const Welcome = () => {
                         
                         '--cr': `${rot}deg`,
                       }}
-                      onClick={() => navigate(`/watch?id=${a.id}`)}
+                      onClick={() => navigate(`/anime/${a.id}`)}
                       onMouseDown={(e) => e.stopPropagation()}
                     >
                       <img src={proxyImg(a.image)} referrerPolicy="no-referrer" draggable={false}
@@ -191,7 +191,7 @@ const Welcome = () => {
             {liveResults.length > 0 && (
               <div className="absolute top-[58px] inset-x-0 glass-strong rounded-2xl overflow-hidden z-[100] max-h-56 overflow-y-auto search-scroll">
                 {liveResults.map(r => (
-                  <div key={r.slug || r.id} onClick={() => navigate(`/watch?id=${r.id}`)}
+                  <div key={r.slug || r.id} onClick={() => navigate(`/anime/${r.id}`)}
                     className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/5 border-b border-white/5 cursor-pointer transition-colors">
                     <img src={proxyImg(r.image)} referrerPolicy="no-referrer" className="w-8 aspect-[3/4.5] object-cover rounded-md" />
                     <div className="flex flex-col min-w-0">

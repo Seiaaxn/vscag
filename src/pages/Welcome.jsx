@@ -223,11 +223,6 @@ const Welcome = () => {
         </div>
       </main>
 
-      <footer className="glass-strong mx-3 mb-4 flex flex-col items-center rounded-3xl px-6 py-6">
-        <p className="text-[10px] text-white/25 font-bold leading-relaxed max-w-2xl text-center tracking-wide">
-          NefuSoft adalah platform streaming anime pihak ketiga. Kami tidak mengunggah atau menyimpan file video apa pun di server kami.
-        </p>
-      </footer>
     </div>
   );
 };

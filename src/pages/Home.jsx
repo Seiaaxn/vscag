@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
 import ContentGrid from '../components/ContentGrid';
 import ErrorState from '../components/ErrorState';
 import Reveal from '../components/Reveal';
@@ -99,7 +98,7 @@ const Home = () => {
   return (
     <div className="min-h-screen">
       <Navbar />
-      <main className="mx-auto max-w-5xl pb-8 pt-6">
+      <main className="mx-auto max-w-5xl pb-28 pt-6">
         <Reveal className="mx-4 mb-5 flex items-center gap-3">
           <img src="/img/nefusoft.webp" alt="NefuSoft" className="h-11 w-11 shrink-0 object-contain" />
           <form className="glass-input flex min-w-0 flex-1 items-center rounded-2xl px-4 py-3"
@@ -127,7 +126,6 @@ const Home = () => {
           )}
         </>}
       </main>
-      <Footer />
     </div>
   );
 };

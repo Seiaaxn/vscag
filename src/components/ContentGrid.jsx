@@ -1,5 +1,6 @@
 import React from 'react';
 import ContentCard from './ContentCard';
+import EmptyState from './EmptyState';
 
 const Shimmer = () => (
   <div className="absolute inset-0 w-[200%] animate-[shimmer_1.5s_infinite]
@@ -20,7 +21,7 @@ export const ListSkeleton = ({ count = 8 }) => (
   <div className={GRID}>{[...Array(count)].map((_, index) => <CardSkeleton key={index} />)}</div>
 );
 
-const ContentGrid = ({ items = [], loading = false, skeletonCount = 8, emptyText = 'Tidak ada konten.' }) => (
+const ContentGrid = ({ items = [], loading = false, skeletonCount = 8, emptyText = 'Belum ada konten di sini. Coba kata kunci lain atau jelajahi menu lain.' }) => (
   loading ? <ListSkeleton count={skeletonCount} /> : items.length > 0 ? (
     <div className={GRID}>
       {items.map((item, index) => (
@@ -30,7 +31,7 @@ const ContentGrid = ({ items = [], loading = false, skeletonCount = 8, emptyText
       ))}
     </div>
   ) : (
-    <div className="glass mx-auto max-w-xs rounded-2xl py-10 text-center text-xs font-bold text-white/40">{emptyText}</div>
+    <EmptyState title="Tidak ada konten" text={emptyText} />
   )
 );
 

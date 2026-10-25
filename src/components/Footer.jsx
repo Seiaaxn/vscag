@@ -1,7 +1,7 @@
 import React from 'react';
 
 const Footer = () => (
-  <footer className="mt-16 bg-[#0a0a0c] border-t border-white/5 pt-12 pb-0 px-6">
+  <footer className="glass-strong mx-3 mt-16 mb-28 rounded-[2rem] px-6 pt-12 pb-0">
     <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
       <div className="flex flex-col items-center md:items-start">
         <img src="https://raw.githubusercontent.com/alip-jmbd/alipp/main/icon-rbg.png" alt="NefuSoft" className="w-20 md:w-28 aspect-square object-contain mb-4" />
@@ -28,7 +28,7 @@ const Footer = () => (
          </div>
       </div>
     </div>
-    <div className="max-w-7xl mx-auto border-t border-white/5 py-6 text-center">
+    <div className="max-w-7xl mx-auto border-t border-white/10 py-6 text-center">
       <p className="text-[10px] text-white/30 font-black tracking-widest uppercase">&copy; {new Date().getFullYear()} NefuSoft. All Rights Reserved.</p>
     </div>
   </footer>

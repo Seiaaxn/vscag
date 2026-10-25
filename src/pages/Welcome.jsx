@@ -178,7 +178,7 @@ const Welcome = () => {
                 placeholder="Cari anime favorit..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && navigate(searchQuery ? `/explore?q=${searchQuery}` : '/home')}
+                onKeyDown={(e) => e.key === 'Enter' && navigate(searchQuery ? `/explore/${encodeURIComponent(searchQuery)}` : '/home')}
               />
               {searchQuery && (
                 <button onClick={() => setSearchQuery('')} className="text-white/20 hover:text-white/50 ml-2 transition-colors">

@@ -158,7 +158,7 @@ const Detail = () => {
             <div className="mt-4 flex flex-wrap gap-1.5">
               {data.genres.map((genre, index) => (
                 <button key={index} type="button"
-                  onClick={() => navigate(`/explore?genre_id=${encodeURIComponent(genre.id)}&genre_name=${encodeURIComponent(genre.name)}`)}
+                  onClick={() => navigate(`/genre/${encodeURIComponent(genre.id)}?name=${encodeURIComponent(genre.name)}`)}
                   className="rounded-lg border border-white/10 px-2.5 py-1 text-[10px] font-bold text-white/55 transition-all hover:border-[#F6CF80]/40 hover:text-[#F6CF80] active:scale-95">
                   {genre.name}
                 </button>

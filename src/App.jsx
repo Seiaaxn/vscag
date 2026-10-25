@@ -10,6 +10,7 @@ const Ongoing  = lazy(() => import('./pages/Ongoing'));
 const Schedule = lazy(() => import('./pages/Schedule'));
 const Watch    = lazy(() => import('./pages/Watch'));
 const Genre    = lazy(() => import('./pages/Genre'));
+const GenreResults = lazy(() => import('./pages/GenreResults'));
 const Detail   = lazy(() => import('./pages/Detail'));
 const Auth     = lazy(() => import('./pages/Auth'));
 const Profile  = lazy(() => import('./pages/Profile'));
@@ -35,6 +36,7 @@ const AnimatedRoutes = () => {
         <Route path="/schedule" element={<Schedule />} />
         <Route path="/watch"    element={<Watch />} />
         <Route path="/genre"    element={<Genre />} />
+        <Route path="/genre/:genreId" element={<GenreResults />} />
         <Route path="/anime/:id" element={<Detail />} />
         <Route path="/login"    element={<Auth mode="login" />} />
         <Route path="/register" element={<Auth mode="register" />} />

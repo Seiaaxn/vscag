@@ -50,7 +50,7 @@ const Explore = () => {
   return (
     <div className="min-h-screen pb-24">
       <Navbar />
-      <main className="mx-auto max-w-5xl px-4 pb-8 pt-28">
+      <main className="mx-auto max-w-5xl px-4 pb-8 pt-6">
         <Reveal as="form" onSubmit={event => { event.preventDefault(); doSearch(); }} className="mb-6 flex gap-2">
           <input value={input} onChange={event => setInput(event.target.value)} placeholder="Cari judul..."
             className="glass-input min-w-0 flex-1 rounded-2xl px-5 py-3.5 text-xs font-bold text-white outline-none placeholder:text-white/30" />
@@ -68,7 +68,7 @@ const Explore = () => {
           <span className="text-[10px] font-bold text-white/30">Hal. {page}</span>
         </div>}
 
-        {error ? <ErrorState message={error} onRetry={load} /> : <ContentGrid items={results} loading={loading} skeletonCount={12} />}
+        {error ? <ErrorState message={error} onRetry={load} /> : <ContentGrid items={results} loading={loading} skeletonCount={12} emptyText={query ? `Tidak ada hasil untuk "${query}". Coba kata kunci lain.` : genreId ? 'Belum ada konten di genre ini.' : undefined} />}
 
         {!loading && !error && results.length > 0 && !query && <div className="mt-10 flex justify-center gap-3">
           <button onClick={() => { setPage(value => value - 1); window.scrollTo(0, 0); }} disabled={page <= 1}

@@ -6,7 +6,7 @@ import Logo from './Logo';
 const ACTIONS = {
   home: ['Ke Beranda', '/home'],
   explore: ['Lihat Semua Konten', '/explore'],
-  genre: ['Pilih Genre', '/history'],
+  genre: ['Pilih Genre', '/genre'],
   ongoing: ['Rilisan Terbaru', '/ongoing'],
   schedule: ['Jadwal Rilis', '/schedule'],
 };

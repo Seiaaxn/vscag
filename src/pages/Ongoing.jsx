@@ -32,7 +32,7 @@ const Ongoing = () => {
   return (
     <div className="min-h-screen pb-24">
       <Navbar />
-      <main className="mx-auto max-w-5xl px-4 pb-8 pt-28">
+      <main className="mx-auto max-w-5xl px-4 pb-8 pt-6">
         <Reveal className="glass mb-6 flex items-end justify-between rounded-3xl px-5 py-4">
           <div>
             <h1 className="text-lg font-black uppercase text-white">Ongoing</h1>

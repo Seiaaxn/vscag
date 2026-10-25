@@ -5,6 +5,7 @@ import Footer from '../components/Footer';
 import ContentGrid from '../components/ContentGrid';
 import ErrorState from '../components/ErrorState';
 import Reveal from '../components/Reveal';
+import EmptyState from '../components/EmptyState';
 import { apiGet, proxyImg } from '../lib/api';
 
 const Row = ({ title, items, loading }) => {
@@ -90,13 +91,25 @@ const Home = () => {
   }, []);
   useEffect(() => { load(); }, [load]);
 
+  const [q, setQ] = useState('');
   const banners = data?.carousel || [];
   const posts = data?.posts || [];
   const chips = [['Semua Konten →', '/explore', true], ['Genre', '/history'], ['Jadwal Rilis', '/schedule']];
   return (
     <div className="min-h-screen">
       <Navbar />
-      <main className="mx-auto max-w-5xl pb-8 pt-24">
+      <main className="mx-auto max-w-5xl pb-8 pt-6">
+        <Reveal className="mx-4 mb-5 flex items-center gap-3">
+          <img src="/img/nefusoft.webp" alt="NefuSoft" className="h-11 w-11 shrink-0 object-contain" />
+          <form className="glass-input flex min-w-0 flex-1 items-center rounded-2xl px-4 py-3"
+            onSubmit={e => { e.preventDefault(); if (q.trim()) navigate(`/explore?q=${encodeURIComponent(q.trim())}`); }}>
+            <input value={q} onChange={e => setQ(e.target.value)} placeholder="Cari judul..."
+              className="min-w-0 flex-1 bg-transparent text-xs font-bold text-white outline-none placeholder:text-white/30" />
+            <button type="submit" className="ml-2 text-[#F6CF80]" aria-label="Cari">
+              <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+            </button>
+          </form>
+        </Reveal>
         {error ? <ErrorState message={error} onRetry={load} /> : <>
           <BannerCarousel items={banners} loading={loading} />
           <Reveal className="no-scrollbar mb-8 flex gap-2 overflow-x-auto px-4">
@@ -108,6 +121,9 @@ const Home = () => {
           {loading ? <Row title="Memuat..." items={[]} loading /> : posts.map((group, index) => (
             <Row key={index} title={group.category || 'Lainnya'} items={group.data || []} loading={false} />
           ))}
+          {!loading && banners.length === 0 && posts.length === 0 && (
+            <EmptyState title="Beranda masih kosong" text="Konten belum tersedia dari server. Coba muat ulang atau jelajahi menu lain." actions={['explore', 'genre', 'schedule']} />
+          )}
         </>}
       </main>
       <Footer />

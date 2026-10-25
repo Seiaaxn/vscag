@@ -326,8 +326,15 @@ export async function apiSearch(query, limit = 20) {
 
 export async function apiGenrePosts(genreId, page = 1, perPage = 20) {
   const genres = await apiGenres();
-  const genre = genres.find(item => String(item.id) === String(genreId) || String(item.slug) === String(genreId));
-  if (!genre) return { results: [], page: Number(page), perPage: Number(perPage), total: 0, totalPages: 0, hasNext: false, source: 'custom_api/genres' };
+  // Cocokkan lewat id, slug, atau nama (tanpa peduli huruf besar/kecil). Genre di halaman detail
+  // bisa berupa nama/slug, bukan id numerik, jadi pencocokan id saja tidak cukup.
+  const norm = value => String(value ?? '').trim().toLowerCase().replace(/[\s_]+/g, '-');
+  const wanted = norm(genreId);
+  const genre = genres.find(item => String(item.id) === String(genreId))
+    || genres.find(item => norm(item.slug) === wanted || norm(item.name) === wanted)
+    // tidak ada di daftar genre -> pakai teksnya langsung sebagai kata kunci
+    || { name: String(genreId).replace(/-/g, ' ') };
+  if (!genre.name) return { results: [], page: Number(page), perPage: Number(perPage), total: 0, totalPages: 0, hasNext: false, source: 'custom_api/genres' };
   // Script referensi tidak menyediakan endpoint posts-by-genre. Gunakan endpoint search
   // yang sama dari script referensi sebagai fallback, tanpa kembali ke API lama.
   const results = await apiSearch(genre.name, 100);

@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import Navbar from '../components/Navbar';
 import ContentGrid from '../components/ContentGrid';
 import ErrorState from '../components/ErrorState';
 import Logo from '../components/Logo';
@@ -57,8 +56,7 @@ const Detail = () => {
   const bookmarkItem = data && { id: data.series?.id ?? data.id, title: data.series?.title || data.title, image: data.series?.image || data.image };
 
   return (
-    <div className="min-h-screen pb-28">
-      <Navbar />
+    <div className="min-h-screen pb-10">
 
       {loading && <DetailSkeleton />}
       {error && <div className="px-4 pt-6"><ErrorState message={error} onRetry={load} /></div>}

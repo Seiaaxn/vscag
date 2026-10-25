@@ -12,7 +12,7 @@ const Row = ({ title, items, loading }) => {
   return (
     <section className="mb-10 px-4">
       <Reveal className="mb-4 flex items-center gap-3">
-        <span className="h-5 w-1 rounded-full bg-gradient-to-b from-[#F6CF80] to-pink-400 shadow-[0_0_12px_rgba(246,207,128,0.7)]" />
+        <span className="h-5 w-1 rounded-full bg-gradient-to-b from-[#F6CF80] to-[#F6CF80]" />
         <h2 className="text-sm font-black uppercase tracking-tight text-white">{title}</h2>
       </Reveal>
       <ContentGrid items={items} loading={loading} skeletonCount={4} />
@@ -42,7 +42,7 @@ const BannerCarousel = ({ items, loading }) => {
         onClick={() => navigate(`/watch?id=${item.id}`)}>
         {items.map((slide, i) => (
           <div key={slide.id || i} className="absolute inset-0 transition-opacity duration-1000" style={{ opacity: i === index ? 1 : 0 }}>
-            <div className="absolute inset-0" style={{ transform: 'translate3d(calc(var(--mx) * -14px), calc(var(--sy) * 0.18px), 0) scale(1.18)' }}>
+            <div className="absolute inset-0" >
               {slide.image
                 ? <img src={proxyImg(slide.image)} alt={slide.title || 'Banner'} className="ken-burns h-full w-full object-cover"
                     onError={event => { event.currentTarget.style.display = 'none'; }} />
@@ -53,7 +53,7 @@ const BannerCarousel = ({ items, loading }) => {
         <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
 
         <div className="absolute inset-x-3 bottom-3 md:inset-x-5 md:bottom-5">
-          <div key={item.id} className="glass-strong rounded-2xl p-3 md:max-w-lg md:p-4 animate-[slideDown_.5s_ease-out_both]">
+          <div key={item.id} className="glass-strong rounded-2xl p-3 md:max-w-lg md:p-4 ">
             <span className="mb-1.5 inline-block rounded-full bg-red-500/80 px-2 py-0.5 text-[8px] font-black text-white">18+ TERBARU</span>
             <h1 className="line-clamp-2 text-sm font-black leading-tight text-white md:text-lg">{item.title}</h1>
             {item.date && <p className="mt-1 text-[10px] font-bold text-white/50">{String(item.date).slice(0, 10)}</p>}

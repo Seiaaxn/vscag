@@ -1,50 +1,51 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Navbar from '../components/Navbar';
 import ContentGrid from '../components/ContentGrid';
-
-const API = '/nk-api';
+import ErrorState from '../components/ErrorState';
+import Reveal from '../components/Reveal';
+import { apiGet } from '../lib/api';
 
 const Ongoing = () => {
   const [items, setItems] = useState([]);
   const [page, setPage] = useState(1);
   const [hasNext, setHasNext] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [tick, setTick] = useState(0);
+  const retry = useCallback(() => setTick(value => value + 1), []);
 
   useEffect(() => {
-    let cancelled = false;
-    setLoading(true);
-    fetch(`${API}/ongoing?page=${page}`)
-      .then(response => response.json())
+    const controller = new AbortController();
+    setLoading(true); setError(null);
+    apiGet(`/ongoing?page=${page}`, { signal: controller.signal })
       .then(response => {
-        if (cancelled) return;
         const data = response.data || {};
         setItems(data.results || []);
         setHasNext(Boolean(data.hasNext));
       })
-      .catch(() => { if (!cancelled) { setItems([]); setHasNext(false); } })
-      .finally(() => { if (!cancelled) setLoading(false); });
+      .catch(e => { if (e.name !== 'AbortError') { setItems([]); setHasNext(false); setError(e.message); } })
+      .finally(() => { if (!controller.signal.aborted) setLoading(false); });
     window.scrollTo(0, 0);
-    return () => { cancelled = true; };
-  }, [page]);
+    return () => controller.abort();
+  }, [page, tick]);
 
   return (
-    <div className="min-h-screen bg-[#0a0a0c] pb-24">
-      <style>{`@keyframes shimmer{0%{transform:translate3d(-100%,0,0) skewX(-20deg)}100%{transform:translate3d(200%,0,0) skewX(-20deg)}} body,html{background:#0a0a0c!important;color:white;margin:0;padding:0}`}</style>
+    <div className="min-h-screen pb-24">
       <Navbar />
-      <main className="mx-auto max-w-5xl px-4 pb-8 pt-24">
-        <div className="mb-5 flex items-end justify-between">
+      <main className="mx-auto max-w-5xl px-4 pb-8 pt-28">
+        <Reveal className="glass mb-6 flex items-end justify-between rounded-3xl px-5 py-4">
           <div>
             <h1 className="text-lg font-black uppercase text-white">Ongoing</h1>
-            <span className="text-[10px] font-bold uppercase tracking-widest text-white/30">Rilisan terbaru dari API recent</span>
+            <span className="text-[10px] font-bold uppercase tracking-widest text-white/40">Rilisan terbaru dari API recent</span>
           </div>
-          <span className="text-xs font-bold text-white/30">Hal. {page}</span>
-        </div>
-        <ContentGrid items={items} loading={loading} skeletonCount={12} />
-        {!loading && items.length > 0 && <div className="mt-8 flex justify-center gap-3">
+          <span className="glass rounded-full px-3 py-1 text-xs font-bold text-[#F6CF80]">Hal. {page}</span>
+        </Reveal>
+        {error ? <ErrorState message={error} onRetry={retry} /> : <ContentGrid items={items} loading={loading} skeletonCount={12} />}
+        {!loading && !error && items.length > 0 && <div className="mt-10 flex justify-center gap-3">
           <button onClick={() => setPage(value => value - 1)} disabled={page <= 1}
-            className="bg-[#16161a] px-5 py-2.5 text-xs font-bold text-white disabled:opacity-20 hover:text-[#F6CF80]">← Prev</button>
+            className="glass glass-hover rounded-full px-6 py-2.5 text-xs font-bold text-white disabled:opacity-25">← Prev</button>
           <button onClick={() => setPage(value => value + 1)} disabled={!hasNext}
-            className="bg-[#16161a] px-5 py-2.5 text-xs font-bold text-white disabled:opacity-20 hover:text-[#F6CF80]">Next →</button>
+            className="glass glass-hover rounded-full px-6 py-2.5 text-xs font-bold text-white disabled:opacity-25">Next →</button>
         </div>}
       </main>
     </div>

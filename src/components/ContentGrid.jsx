@@ -21,12 +21,12 @@ export const ListSkeleton = ({ count = 8 }) => (
   <div className={GRID}>{[...Array(count)].map((_, index) => <CardSkeleton key={index} />)}</div>
 );
 
-const ContentGrid = ({ items = [], loading = false, skeletonCount = 8, emptyText = 'Belum ada konten di sini. Coba kata kunci lain atau jelajahi menu lain.' }) => (
+const ContentGrid = ({ items = [], to = 'anime', loading = false, skeletonCount = 8, emptyText = 'Belum ada konten di sini. Coba kata kunci lain atau jelajahi menu lain.' }) => (
   loading ? <ListSkeleton count={skeletonCount} /> : items.length > 0 ? (
     <div className={GRID}>
       {items.map((item, index) => (
         <div key={item.id || item.slug || index} className="cv-auto">
-          <ContentCard item={item} />
+          <ContentCard item={item} to={to} />
         </div>
       ))}
     </div>

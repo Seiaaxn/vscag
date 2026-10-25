@@ -4,7 +4,7 @@ import Navbar from '../components/Navbar';
 import ErrorState from '../components/ErrorState';
 import Reveal from '../components/Reveal';
 import EmptyState from '../components/EmptyState';
-import { apiGet } from '../lib/api';
+import { apiGet, genrePath } from '../lib/api';
 
 const Shimmer = () => <div className="absolute inset-0 w-[200%] animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-white/10 to-transparent" style={{ transform: 'translate3d(-100%,0,0) skewX(-20deg)' }} />;
 
@@ -43,7 +43,7 @@ const Genre = () => {
           <EmptyState icon="🔎" title="Genre tidak ditemukan" text="Tidak ada genre yang cocok dengan filter. Hapus filter atau lihat semua konten." actions={['explore', 'home']} />
         ) : <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
           {filtered.map((genre, index) => <Reveal key={genre.id || index} delay={(index % 8) * 40}>
-            <button onClick={() => navigate(`/genre/${encodeURIComponent(genre.id)}?name=${encodeURIComponent(genre.name)}`)}
+            <button onClick={() => navigate(genrePath(genre))}
               className="glass glass-hover flex w-full min-w-0 items-center justify-between rounded-2xl px-4 py-3.5 text-left active:scale-[0.97]">
               <span className="truncate text-[11px] font-bold text-white/80">{genre.name}</span>
               <span className="ml-2 shrink-0 text-xs text-[#F6CF80]">›</span>

@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import Navbar from '../components/Navbar';
 import ErrorState from '../components/ErrorState';
 import Reveal from '../components/Reveal';
+import EmptyState from '../components/EmptyState';
 import { apiGet } from '../lib/api';
 
 const Shimmer = () => <div className="absolute inset-0 w-[200%] animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-white/10 to-transparent" style={{ transform: 'translate3d(-100%,0,0) skewX(-20deg)' }} />;
@@ -24,7 +25,7 @@ const Schedule = () => {
   return (
     <div className="min-h-screen pb-24">
       <Navbar />
-      <main className="mx-auto max-w-3xl px-4 pb-8 pt-28">
+      <main className="mx-auto max-w-3xl px-4 pb-8 pt-6">
         <Reveal className="glass mb-6 rounded-3xl px-5 py-4">
           <h1 className="text-lg font-black uppercase text-white">Jadwal Rilis</h1>
           <span className="text-[10px] font-bold uppercase tracking-widest text-white/40">Upcoming</span>
@@ -57,7 +58,7 @@ const Schedule = () => {
           </Reveal>)}
         </div>}
 
-        {!loading && !error && schedule.length === 0 && <div className="glass mx-auto max-w-xs rounded-2xl py-16 text-center text-sm font-bold text-white/40">Tidak ada jadwal tersedia</div>}
+        {!loading && !error && schedule.length === 0 && <EmptyState icon="📅" title="Belum ada jadwal rilis" text="Jadwal belum tersedia saat ini. Lihat rilisan terbaru atau jelajahi semua konten." actions={['ongoing', 'explore', 'home']} />}
       </main>
     </div>
   );

@@ -225,7 +225,7 @@ const Watch = () => {
                 <div className="flex flex-wrap gap-1.5 mb-4">
                   {data.genres.map((g, i) => (
                     <button key={i}
-                      onClick={() => navigate(`/explore?genre_id=${encodeURIComponent(g.id)}&genre_name=${encodeURIComponent(g.name)}`)}
+                      onClick={() => navigate(`/genre/${encodeURIComponent(g.id)}?name=${encodeURIComponent(g.name)}`)}
                       className="text-[9px] font-bold text-white/50 border border-white/10 px-2 py-1
                         rounded-lg hover:border-[#F6CF80]/40 hover:text-[#F6CF80] transition-all active:scale-95">
                       {g.name}

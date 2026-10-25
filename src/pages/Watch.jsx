@@ -4,6 +4,7 @@ import Navbar from '../components/Navbar';
 import ContentGrid from '../components/ContentGrid';
 import Reveal from '../components/Reveal';
 import EmptyState from '../components/EmptyState';
+import Logo from '../components/Logo';
 import { apiGet, proxyImg } from '../lib/api';
 
 const RelatedRow = ({ title, items }) => {
@@ -58,7 +59,7 @@ const Watch = () => {
       <div className="min-h-screen pb-24">
         <Navbar />
         <div className="mx-auto max-w-2xl px-4 pt-10">
-          <EmptyState icon="🎬" title="Belum ada judul dipilih" text="Pilih judul dari beranda, pencarian, atau genre untuk mulai menonton." actions={['home', 'explore', 'genre']} />
+          <EmptyState title="Belum ada judul dipilih" text="Pilih judul dari beranda, pencarian, atau genre untuk mulai menonton." actions={['home', 'explore', 'genre']} />
         </div>
       </div>
     );
@@ -87,7 +88,7 @@ const Watch = () => {
           )}
           {!loading && !streamUrl && !error && (
             <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 px-6 text-center">
-              <span className="text-4xl opacity-30">🎞️</span>
+              <Logo className="h-12 w-12" dim />
               <span className="text-white/60 text-xs font-bold">
                 {iframeStreams.length > 0
                   ? 'Memakai iframe dari API karena direct video tidak tersedia.'
@@ -131,7 +132,7 @@ const Watch = () => {
                     )}
                     {data.score && (
                       <span className="bg-white/5 text-white/50 text-[8px] font-black px-1.5 py-0.5 rounded-sm">
-                        ★ {data.score}
+                        <Logo className="mr-1 inline h-2.5 w-2.5 align-[-1px]" />{data.score}
                       </span>
                     )}
                     {data.status && (

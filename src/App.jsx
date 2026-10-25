@@ -1,6 +1,5 @@
 import React, { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import Background from './components/Background';
 
 const Welcome  = lazy(() => import('./pages/Welcome'));
 const Home     = lazy(() => import('./pages/Home'));
@@ -22,7 +21,7 @@ const Loader = () => (
 const AnimatedRoutes = () => {
   const location = useLocation();
   return (
-    <div key={location.pathname} className="page-enter">
+    <div key={location.pathname}>
       <Routes location={location}>
         <Route path="/"         element={<Welcome />} />
         <Route path="/home"     element={<Home />} />
@@ -40,7 +39,6 @@ const AnimatedRoutes = () => {
 function App() {
   return (
     <Router>
-      <Background />
       <Suspense fallback={<Loader />}>
         <AnimatedRoutes />
       </Suspense>

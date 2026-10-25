@@ -2,9 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import ContentGrid from '../components/ContentGrid';
-
-const API = '/nk-api';
-const proxyImg = url => url ? `/nk-api/img?url=${encodeURIComponent(url)}` : null;
+import Reveal from '../components/Reveal';
+import { apiGet, proxyImg } from '../lib/api';
 
 const RelatedRow = ({ title, items }) => {
   if (!items?.length) return null;
@@ -33,9 +32,8 @@ const Watch = () => {
     if (!id) return;
     window.scrollTo(0, 0);
     setLoading(true); setData(null); setError(null);
-    fetch(`${API}/detail/${encodeURIComponent(id)}`)
-      .then(r => r.json())
-      .then(res => { if (res.error) throw new Error(res.error); setData(res.data); setActiveServer(0); })
+    apiGet(`/detail/${encodeURIComponent(id)}`)
+      .then(res => { setData(res.data); setActiveServer(0); })
       .catch(e => setError(e.message))
       .finally(() => setLoading(false));
   }, [id]);
@@ -55,16 +53,12 @@ const Watch = () => {
   ));
 
   return (
-    <div className="min-h-screen bg-[#0a0a0c] pb-24">
-      <style>{`
-        @keyframes shimmer{0%{transform:translate3d(-100%,0,0) skewX(-20deg)}100%{transform:translate3d(200%,0,0) skewX(-20deg)}}
-        body,html{background:#0a0a0c!important;color:white;margin:0;padding:0}
-      `}</style>
+    <div className="min-h-screen pb-24">
       <Navbar />
 
-      <div className="pt-16 max-w-2xl mx-auto">
+      <div className="pt-24 max-w-2xl mx-auto">
         {/* Player */}
-        <div className="w-full aspect-video bg-black relative overflow-hidden border-b border-white/5">
+        <div className="glass mx-3 aspect-video relative overflow-hidden rounded-3xl bg-black/70 shadow-[0_20px_60px_rgba(0,0,0,0.6)]">
           {loading && (
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="w-7 h-7 border-2 border-[#F6CF80]/30 border-t-[#F6CF80] rounded-full animate-spin" />
@@ -101,7 +95,7 @@ const Watch = () => {
           </button>
 
           {error && (
-            <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4 mb-4">
+            <div className="glass rounded-2xl border-red-500/30 p-4 mb-4">
               <p className="text-red-400 text-xs font-bold">{error}</p>
             </div>
           )}
@@ -113,7 +107,7 @@ const Watch = () => {
                 {data.image && (
                   <img src={proxyImg(data.image)}
                     onError={e => { e.target.style.display='none'; }}
-                    className="w-20 aspect-video object-cover rounded-lg shrink-0" />
+                    className="w-24 aspect-video object-cover rounded-xl shrink-0 ring-1 ring-white/15 shadow-lg" />
                 )}
                 <div className="flex flex-col min-w-0 flex-1">
                   <div className="flex flex-wrap gap-1 mb-1.5">
@@ -142,7 +136,7 @@ const Watch = () => {
 
               {/* Stream note */}
               {data.streamnote && (
-                <div className="bg-[#F6CF80]/5 rounded-md px-3 py-2 mb-4">
+                <div className="glass rounded-2xl px-4 py-3 mb-4">
                   <p className="text-[#F6CF80]/70 text-[10px] font-bold leading-relaxed">{data.streamnote}</p>
                 </div>
               )}
@@ -156,10 +150,10 @@ const Watch = () => {
                   <div className={`grid gap-1.5 ${serverGridClass}`}>
                     {serverList.map((s, i) => (
                       <button key={i} onClick={() => setActiveServer(i)}
-                        className={`min-w-0 px-2 py-2 text-[10px] font-black rounded-md transition-colors truncate
+                        className={`min-w-0 px-2 py-2.5 text-[10px] font-black rounded-xl transition-all truncate active:scale-95
                           ${activeServer === i
-                            ? 'bg-[#F6CF80] text-black'
-                            : 'bg-[#16161a] text-white/60 hover:bg-[#202026]'}`}>
+                            ? 'bg-[#F6CF80] text-black shadow-[0_6px_20px_rgba(246,207,128,0.35)]'
+                            : 'glass text-white/70 hover:text-[#F6CF80]'}`}>
                         {s.label || `Stream ${i+1}`}
                       </button>
                     ))}
@@ -168,7 +162,7 @@ const Watch = () => {
               )}
 
               {/* Meta info grid */}
-              <div className="bg-[#16161a] rounded-md p-4 mb-4">
+              <Reveal className="glass rounded-2xl p-4 mb-4">
                 <div className="grid grid-cols-2 gap-3">
                   {[
                     ['Produser', data.producer],
@@ -183,7 +177,7 @@ const Watch = () => {
                     </div>
                   ))}
                 </div>
-              </div>
+              </Reveal>
 
               {/* Genre chips */}
               {data.genres?.length > 0 && (
@@ -201,10 +195,10 @@ const Watch = () => {
 
               {/* Synopsis */}
               {data.synopsis && (
-                <div className="bg-[#16161a] rounded-md p-4 mb-4">
+                <Reveal className="glass rounded-2xl p-4 mb-4">
                   <span className="text-[10px] font-black text-[#F6CF80] uppercase tracking-widest block mb-2">Sinopsis</span>
-                  <p className="text-white/60 text-xs leading-relaxed">{data.synopsis}</p>
-                </div>
+                  <p className="text-white/70 text-xs leading-relaxed">{data.synopsis}</p>
+                </Reveal>
               )}
 
               {/* Downloads */}
@@ -217,7 +211,7 @@ const Watch = () => {
                   </summary>
                   <div className="flex flex-col gap-2 mt-2">
                     {data.downloads.map((dl, i) => (
-                      <div key={i} className="bg-[#16161a] border border-white/5 rounded-xl p-3">
+                      <div key={i} className="glass rounded-2xl p-3">
                         <span className="text-[#F6CF80] text-[10px] font-black uppercase">{dl.quality}</span>
                         <div className="flex gap-2 flex-wrap mt-1.5">
                           {dl.links?.map((link, j) => (

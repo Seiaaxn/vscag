@@ -41,10 +41,10 @@ const BannerCarousel = ({ items, loading }) => {
       <div className="glass group relative aspect-[2/1] cursor-pointer overflow-hidden rounded-3xl md:aspect-[21/9]"
         onClick={() => navigate(`/watch?id=${item.id}`)}>
         {items.map((slide, i) => (
-          <div key={slide.id || i} className="absolute inset-0 transition-opacity duration-1000" style={{ opacity: i === index ? 1 : 0 }}>
+          <div key={slide.id || i} className="absolute inset-0 transition-opacity duration-500" style={{ opacity: i === index ? 1 : 0 }}>
             <div className="absolute inset-0" >
               {slide.image
-                ? <img src={proxyImg(slide.image)} alt={slide.title || 'Banner'} className="ken-burns h-full w-full object-cover"
+                ? <img src={proxyImg(slide.image)} alt={slide.title || 'Banner'} className="h-full w-full object-cover" decoding="async"
                     onError={event => { event.currentTarget.style.display = 'none'; }} />
                 : <div className="flex h-full w-full items-center justify-center"><span className="text-5xl opacity-20">🐱</span></div>}
             </div>

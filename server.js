@@ -1,4 +1,7 @@
 import express from 'express';
+import path from 'node:path';
+import fs from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import {
   withCache, apiRecent, apiOngoing, apiAll, apiDetail,
   apiGenres, apiSearch, apiGenrePosts, apiComingSoon, apiTest, cors
@@ -6,10 +9,14 @@ import {
 
 const app = express();
 const PORT = process.env.PORT || 3001;
+const DIST = path.join(path.dirname(fileURLToPath(import.meta.url)), 'dist');
 
 app.use((req, res, next) => { cors(res); next(); });
 const ok = (res, data) => res.json({ status: 200, data });
-const fail = (res, e, c = 500) => res.status(c).json({ error: e.message, status: e.status || c });
+const cleanMessage = message => (/<!doctype|<html/i.test(String(message))
+  ? 'Situs sumber menolak permintaan (mungkin proteksi Cloudflare atau sedang down).'
+  : String(message));
+const fail = (res, e, c = 500) => res.status(c).json({ error: cleanMessage(e.message), status: e.status || c });
 const positiveInt = (value, fallback, max = 100) => {
   const number = Number.parseInt(value, 10);
   return Number.isFinite(number) ? Math.min(max, Math.max(1, number)) : fallback;
@@ -91,4 +98,23 @@ app.get('/nk-api/img', async (req, res) => {
 });
 
 app.get('/nk-api/ping', (_, res) => res.json({ ok: true }));
-app.listen(PORT, () => console.log(`[dev] http://localhost:${PORT}`));
+
+// Route /nk-api yang tidak ada selalu JSON (bukan halaman HTML bawaan Express)
+app.use('/nk-api', (_req, res) => res.status(404).json({ error: 'Endpoint tidak ditemukan', status: 404 }));
+
+// Produksi (npm run build && npm start): sajikan frontend + fallback SPA
+if (fs.existsSync(DIST)) {
+  app.use(express.static(DIST));
+  app.use((req, res, next) => {
+    if (req.method !== 'GET' || req.path.startsWith('/nk-api')) return next();
+    res.sendFile(path.join(DIST, 'index.html'));
+  });
+}
+
+// Error tak terduga di mana pun -> JSON untuk /nk-api
+app.use((err, req, res, _next) => {
+  if (req.path.startsWith('/nk-api')) return res.status(500).json({ error: cleanMessage(err.message), status: 500 });
+  res.status(500).send('Internal Server Error');
+});
+
+app.listen(PORT, () => console.log(`[server] http://localhost:${PORT}`));

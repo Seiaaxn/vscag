@@ -5,7 +5,7 @@
       "destination": "/api/nk-api/:path*"
     },
     {
-      "source": "/(.*)",
+      "source": "/((?!api/|nk-api/).*)",
       "destination": "/index.html"
     }
   ]

@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-
-const API = '/nk-api';
-const proxyImg = url => url ? `${API}/img?url=${encodeURIComponent(url)}` : null;
+import { apiGet, proxyImg } from '../lib/api';
 
 const Welcome = () => {
   const navigate = useNavigate();
@@ -16,8 +14,7 @@ const Welcome = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    fetch(`${API}/home`)
-      .then(r => r.json())
+    apiGet('/home')
       .then(res => {
         const data = res.data || {};
         const grouped = Array.isArray(data.posts) ? data.posts.flatMap(group => group.data || []) : [];
@@ -33,7 +30,7 @@ const Welcome = () => {
     let isMounted = true;
     const timer = setTimeout(async () => {
       try {
-        const res = await fetch(`${API}/search?q=${encodeURIComponent(searchQuery)}`).then(r => r.json());
+        const res = await apiGet(`/search?q=${encodeURIComponent(searchQuery)}`);
         if (isMounted) setLiveResults(res.data?.results || []);
       } catch (e) {
         if (isMounted) setLiveResults([]);
@@ -70,7 +67,7 @@ const Welcome = () => {
   const yOffs = [0, -10, 6, -5, 8, -3, 4, -8, 3, -6, 7, -4, 5, -9, 2, -7, 6, -2, 8, -5];
 
   return (
-    <div className="min-h-screen bg-[#0a0a0c] flex flex-col text-white overflow-x-hidden">
+    <div className="min-h-screen flex flex-col text-white overflow-x-hidden">
       <style>{`
         @keyframes cardFloat {
           0%, 100% { transform: rotate(var(--cr)) translateY(0px); }
@@ -99,7 +96,7 @@ const Welcome = () => {
         <div className="cursor-pointer" onClick={() => navigate('/home')}>
           <img src="/img/nefusoft.webp" alt="NefuSoft" className="w-14 object-contain" />
         </div>
-        <div className="flex gap-3 bg-white/5 border border-white/10 px-4 py-2 rounded-full">
+        <div className="glass flex gap-3 px-4 py-2 rounded-full">
           {navLinks.map((link, i) => (
             <button key={i} aria-label={link.label} onClick={() => navigate(link.path)} className="text-white/50 hover:text-[#F6CF80] transition-colors p-1.5">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">{link.icon}</svg>
@@ -112,12 +109,12 @@ const Welcome = () => {
 
         {/* CARD SCROLL */}
         <div className="relative w-full" style={{ height: '210px' }}>
-          <div className="absolute left-0 top-0 bottom-0 w-14 bg-gradient-to-r from-[#0a0a0c] to-transparent z-10 pointer-events-none" />
-          <div className="absolute right-0 top-0 bottom-0 w-14 bg-gradient-to-l from-[#0a0a0c] to-transparent z-10 pointer-events-none" />
+          <div className="absolute left-0 top-0 bottom-0 w-14 bg-gradient-to-r from-[#07070a] to-transparent z-10 pointer-events-none" />
+          <div className="absolute right-0 top-0 bottom-0 w-14 bg-gradient-to-l from-[#07070a] to-transparent z-10 pointer-events-none" />
           <div
             ref={scrollRef}
             className="card-scroll flex items-center gap-4 overflow-x-auto h-full px-10"
-            style={{ cursor: 'grab', paddingTop: '18px', paddingBottom: '18px' }}
+            style={{ cursor: 'grab', paddingTop: '18px', paddingBottom: '18px', transform: 'translate3d(calc(var(--mx) * -22px), calc(var(--sy) * -0.12px), 0)' }}
             onMouseDown={onMouseDown}
             onMouseMove={onMouseMove}
             onMouseUp={onMouseUp}
@@ -156,14 +153,14 @@ const Welcome = () => {
         </div>
 
         {/* HERO TEXT + SEARCH */}
-        <div className="flex flex-col items-start px-6 pt-5 pb-10 max-w-lg">
+        <div className="glass-strong mx-4 mt-4 mb-10 flex max-w-lg flex-col items-start rounded-[2rem] px-6 pt-6 pb-8 md:mx-10" style={{ transform: 'translate3d(calc(var(--mx) * 8px), calc(var(--sy) * -0.06px), 0)' }}>
           <div className="inline-flex items-center gap-2 bg-[#F6CF80]/10 border border-[#F6CF80]/20 rounded-full px-3 py-1 mb-4 fade-up-1">
             <span className="w-1.5 h-1.5 rounded-full bg-[#F6CF80]" style={{ animation: 'blink 2s ease-in-out infinite' }} />
             <span className="text-[#F6CF80] text-[10px] font-black uppercase tracking-widest">Gratis & Tanpa Iklan</span>
           </div>
 
           <h1 className="text-[2rem] font-[900] leading-[1.1] tracking-tight mb-2 text-white fade-up-1">
-            Nonton Anime<br /><span className="text-[#F6CF80]">Sub Indo</span> Sepuasnya
+            Nonton Anime<br /><span className="text-shimmer">Sub Indo</span> Sepuasnya
           </h1>
           <p className="text-white/35 text-xs font-medium leading-relaxed mb-5 fade-up-2">
             Ribuan judul anime, kualitas 360p–1080p, gratis tanpa gangguan.
@@ -171,7 +168,7 @@ const Welcome = () => {
 
           {/* Search */}
           <div className="relative w-full fade-up-2">
-            <div className="flex items-center bg-white/6 border border-white/10 rounded-xl px-4 py-3 focus-within:border-[#F6CF80]/35 transition-all">
+            <div className="glass-input flex items-center rounded-2xl px-4 py-3.5">
               <svg className="w-4 h-4 text-white/25 mr-3 shrink-0" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
@@ -192,7 +189,7 @@ const Welcome = () => {
               )}
             </div>
             {liveResults.length > 0 && (
-              <div className="absolute top-[52px] inset-x-0 bg-[#16161a] border border-white/10 rounded-xl overflow-hidden z-[100] max-h-56 shadow-2xl overflow-y-auto search-scroll">
+              <div className="absolute top-[58px] inset-x-0 glass-strong rounded-2xl overflow-hidden z-[100] max-h-56 overflow-y-auto search-scroll">
                 {liveResults.map(r => (
                   <div key={r.slug || r.id} onClick={() => navigate(`/watch?id=${r.id}`)}
                     className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/5 border-b border-white/5 cursor-pointer transition-colors">
@@ -208,7 +205,7 @@ const Welcome = () => {
           </div>
 
           <button onClick={() => navigate('/home')}
-            className="fade-up-3 mt-5 bg-[#F6CF80] hover:bg-[#f0c85a] text-black font-black px-8 py-3 rounded-xl active:scale-95 transition-all shadow-[0_8px_24px_rgba(246,207,128,0.2)] tracking-wider text-xs uppercase flex items-center gap-2">
+            className="btn-gold fade-up-3 mt-5 text-black font-black px-8 py-3.5 rounded-2xl tracking-wider text-xs uppercase flex items-center gap-2">
             Masuk Beranda
             <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
@@ -218,7 +215,7 @@ const Welcome = () => {
 
         {/* ABOUT */}
         <div className="mt-4 mb-24 flex flex-col items-center text-center px-6">
-          <img src="/img/kaguya.webp" alt="Kaguya" className="w-24 object-contain mb-5 drop-shadow-2xl" loading="lazy" />
+          <img src="/img/kaguya.webp" alt="Kaguya" className="w-24 object-contain mb-5 drop-shadow-2xl" loading="lazy" style={{ animation: 'float 5s ease-in-out infinite' }} />
           <h2 className="text-3xl font-[900] tracking-tighter mb-3">Nefu<span className="text-[#F6CF80]">Soft</span></h2>
           <p className="text-white/35 text-sm font-medium leading-relaxed max-w-xs">
             NefuSoft menyediakan akses menonton ribuan judul anime secara gratis tanpa gangguan iklan.
@@ -226,7 +223,7 @@ const Welcome = () => {
         </div>
       </main>
 
-      <footer className="w-full py-6 px-6 border-t border-white/5 flex flex-col items-center">
+      <footer className="glass-strong mx-3 mb-4 flex flex-col items-center rounded-3xl px-6 py-6">
         <p className="text-[10px] text-white/25 font-bold leading-relaxed max-w-2xl text-center tracking-wide">
           NefuSoft adalah platform streaming anime pihak ketiga. Kami tidak mengunggah atau menyimpan file video apa pun di server kami.
         </p>

@@ -65,8 +65,8 @@ const Navbar = () => {
       <style>{`
         @keyframes slideDown{from{opacity:0;transform:translateY(-10px) scaleY(0.95)}to{opacity:1;transform:translateY(0) scaleY(1)}}
         @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-        .notch-nav{position:relative;height:70px;background:linear-gradient(135deg,rgba(255,255,255,0.12),rgba(255,255,255,0.03)),rgba(14,14,20,0.55);-webkit-backdrop-filter:blur(26px) saturate(180%);backdrop-filter:blur(26px) saturate(180%);border:1px solid rgba(255,255,255,0.14);border-radius:32px;display:flex;align-items:flex-end;justify-content:space-around;box-shadow:0 12px 40px rgba(0,0,0,0.5),inset 0 1px 0 rgba(255,255,255,0.2);padding-bottom:8px}
-        .notch-nav::before{content:'';position:absolute;top:-1px;left:${notchPosition};transform:translateX(-50%);width:64px;height:32px;background:rgba(20,20,28,0.7);-webkit-backdrop-filter:blur(26px);backdrop-filter:blur(26px);border-radius:0 0 50% 50% / 0 0 100% 100%;border:1px solid rgba(255,255,255,0.14);border-top:none;transition:left 0.5s cubic-bezier(0.34,1.56,0.64,1);z-index:0}
+        .notch-nav{position:relative;height:70px;background:rgba(18,18,22,0.96);border:1px solid rgba(255,255,255,0.14);border-radius:32px;display:flex;align-items:flex-end;justify-content:space-around;box-shadow:0 12px 40px rgba(0,0,0,0.5),inset 0 1px 0 rgba(255,255,255,0.2);padding-bottom:8px}
+        .notch-nav::before{content:'';position:absolute;top:-1px;left:${notchPosition};transform:translateX(-50%);width:64px;height:32px;background:rgba(18,18,22,0.96);border-radius:0 0 50% 50% / 0 0 100% 100%;border:1px solid rgba(255,255,255,0.14);border-top:none;transition:left 0.5s cubic-bezier(0.34,1.56,0.64,1);z-index:0}
         .notch-item{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;cursor:pointer;flex:1;height:100%;padding-bottom:6px;z-index:1}
         .notch-icon-wrapper{width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:16px;transition:all 0.5s cubic-bezier(0.34,1.56,0.64,1);margin-bottom:2px;position:relative}
         .notch-icon-wrapper.active{background:#F6CF80;transform:translateY(-16px) scale(1.1);box-shadow:0 8px 24px rgba(246,207,128,0.35),0 4px 12px rgba(246,207,128,0.2);border-radius:18px}
@@ -98,7 +98,7 @@ const Navbar = () => {
               </svg>
             </div>
           </div>
-          <div className={`absolute inset-0 bg-[#12121a]/70 backdrop-blur-xl z-20 flex items-center px-4 transition-all duration-300 ease-out ${isSearchOpen ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8 pointer-events-none'}`}>
+          <div className={`absolute inset-0 bg-[#121216] z-20 flex items-center px-4 transition-all duration-300 ease-out ${isSearchOpen ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8 pointer-events-none'}`}>
             <form onSubmit={handleSearchSubmit} className="flex-1 flex items-center gap-3">
               <button type="submit" className="text-[#F6CF80] shrink-0 p-2">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
@@ -165,7 +165,7 @@ const Navbar = () => {
       </div>
 
       {showLoginPopup && (
-        <div className="fixed inset-0 z-[999] bg-black/45 backdrop-blur-md flex items-center justify-center p-4 animate-[fadeIn_0.2s_ease-out]">
+        <div className="fixed inset-0 z-[999] bg-black/70 flex items-center justify-center p-4 animate-[fadeIn_0.2s_ease-out]">
           <div className="glass-strong rounded-3xl p-8 max-w-sm w-full flex flex-col items-center relative shadow-2xl">
             <button onClick={() => setShowLoginPopup(false)}
               className="absolute top-5 right-5 text-white/30 hover:text-[#F6CF80] transition-colors">

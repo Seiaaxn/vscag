@@ -97,6 +97,12 @@ app.get('/nk-api/img', async (req, res) => {
   } catch { res.status(500).end(); }
 });
 
+// Proxy frame player (iklan diblokir server-side, tanpa sandbox)
+app.get('/nk-api/frame', async (req, res) => {
+  const { proxyFrame } = await import('./api/frameProxy.js');
+  return proxyFrame(String(req.query.url || ''), res);
+});
+
 app.get('/nk-api/ping', (_, res) => res.json({ ok: true }));
 
 // Route /nk-api yang tidak ada selalu JSON (bukan halaman HTML bawaan Express)

@@ -94,4 +94,4 @@ export async function proxyFrame(rawUrl, res) {
   } catch {
     res.status(502).json({ error: 'Gagal memuat halaman player dari situs sumber.', status: 502 });
   }
-  }
+}
